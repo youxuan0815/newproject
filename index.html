@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情緒氣象觀測站</title>
+    <style>
+        :root {
+            --bg: #f5f0eb;
+            --card-bg: #ffffff;
+            --text: #3e3640;
+            --text-secondary: #6b5e6b;
+            --border: #e0d8d0;
+            --shadow: 0 2px 12px rgba(60, 40, 30, 0.07);
+            --shadow-hover: 0 6px 24px rgba(60, 40, 30, 0.12);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --accent: #5b7a9a;
+            --accent-light: #e8f0f7;
+            --danger: #c0392b;
+            --success: #4a8c6f;
+            --sunny: #f0a04b;
+            --sunny-bg: #fef9f2;
+            --sunny-border: #f5d5a8;
+            --cloudy: #8a8a8a;
+            --cloudy-bg: #f5f4f4;
+            --cloudy-border: #d0d0d0;
+            --rainy: #5b8cb8;
+            --rainy-bg: #f2f6fa;
+            --rainy-border: #b8cfe0;
+            --thunder: #6b4e8a;
+            --thunder-bg: #f7f3fa;
+            --thunder-border: #d0c0e0;
+            --rainbow: #e8788a;
+            --rainbow-bg: #fef6f7;
+            --rainbow-border: #f5c8d0;
+            --done-overlay: rgba(0, 0, 0, 0.03);
+            --done-text: #a09a9a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'PingFang TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 背景裝飾 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -180px;
+            right: -120px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(240, 160, 75, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -150px;
+            left: -100px;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(91, 140, 184, 0.07) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 28px 20px 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 頁首 */
+        .header {
+            text-align: center;
+            padding: 32px 0 20px;
+            position: relative;
+        }
+        .header-icon {
+            font-size: 52px;
+            display: block;
+            margin-bottom: 4px;
+            animation: float 3s ease-in-out infinite;
+            letter-spacing: 0;
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #4a3f3a;
+            margin: 0;
+        }
+        .header .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            letter-spacing: 0.05em;
+        }
+
+        /* 表單卡片 */
+        .form-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 28px 26px 22px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+        .form-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+        .form-section-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-weight: 600;
+            display: block;
+        }
+
+        /* 天氣選擇 */
+        .mood-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .mood-option {
+            flex: 1 1 0;
+            min-width: 80px;
+            padding: 14px 8px 12px;
+            text-align: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            border: 2px solid var(--border);
+            background: #fafaf8;
+            transition: var(--transition);
+            user-select: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .mood-option:hover {
+            border-color: #c0b8b0;
+            background: #fefefe;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+        .mood-option:active {
+            transform: scale(0.96);
+        }
+        .mood-option .emoji {
+            font-size: 2rem;
+            line-height: 1;
+            transition: var(--transition);
+        }
+        .mood-option .label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        .mood-option.selected {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            box-shadow: 0 0 0 4px rgba(91, 122, 154, 0.1);
+            transform: translateY(-2px);
+        }
+        .mood-option.selected .label {
+            color: #3a556e;
+            font-weight: 600;
+        }
+        .mood-option.selected .emoji {
+            transform: scale(1.15);
+        }
+        /* 各天氣選中色 */
+        .mood-option[data-mood="sunny"].selected {
+            border-color: var(--sunny);
+            background: var(--sunny-bg);
+            box-shadow: 0 0 0 4px rgba(240, 160, 75, 0.12);
+        }
+        .mood-option[data-mood="sunny"].selected .label {
+            color: #b87630;
+        }
+        .mood-option[data-mood="cloudy"].selected {
+            border-color: var(--cloudy);
+            background: var(--cloudy-bg);
+            box-shadow: 0 0 0 4px rgba(138, 138, 138, 0.1);
+        }
+        .mood-option[data-mood="cloudy"].selected .label {
+            color: #5e5e5e;
+        }
+        .mood-option[data-mood="rainy"].selected {
+            border-color: var(--rainy);
+            background: var(--rainy-bg);
+            box-shadow: 0 0 0 4px rgba(91, 140, 184, 0.12);
+        }
+        .mood-option[data-mood="rainy"].selected .label {
+            color: #3d6d91;
+        }
+        .mood-option[data-mood="thunder"].selected {
+            border-color: var(--thunder);
+            background: var(--thunder-bg);
+            box-shadow: 0 0 0 4px rgba(107, 78, 138, 0.1);
+        }
+        .mood-option[data-mood="thunder"].selected .label {
+            color: #543a6e;
+        }
+        .mood-option[data-mood="rainbow"].selected {
+            border-color: var(--rainbow);
+            background: var(--rainbow-bg);
+            box-shadow: 0 0 0 4px rgba(232, 120, 138, 0.1);
+        }
+        .mood-option[data-mood="rainbow"].selected .label {
+            color: #c05566;
+        }
+
+        /* 強度滑桿 */
+        .intensity-group {
+            margin-bottom: 20px;
+        }
+        .intensity-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .intensity-row input[type="range"] {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(to right, #e0d8d0 0%, #f0a04b 50%, #c0392b 100%);
+            outline: none;
+            cursor: pointer;
+        }
+        .intensity-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid #5b7a9a;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: var(--transition);
+        }
+        .intensity-row input[type="range"]::-webkit-slider-thumb:hover {
+            border-color: #3a556e;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+        .intensity-value {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 48px;
+            height: 44px;
+            background: #f5f0eb;
+            border-radius: 22px;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: #4a3f3a;
+            letter-spacing: 0.02em;
+            border: 2px solid #e0d8d0;
+        }
+        .intensity-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            padding: 0 4px;
+        }
+
+        /* 日記 */
+        .diary-group {
+            margin-bottom: 18px;
+        }
+        .diary-group textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 14px 16px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            font-size: 0.95rem;
+            font-family: inherit;
+            resize: vertical;
+            transition: var(--transition);
+            background: #fafaf8;
+            color: var(--text);
+            line-height: 1.5;
+        }
+        .diary-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(91, 122, 154, 0.07);
+            background: #fff;
+        }
+        .diary-group textarea::placeholder {
+            color: #c5bfb8;
+        }
+        .char-count {
+            text-align: right;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .char-count.over {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        /* 提交按鈕 */
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            border: none;
+            border-radius: 28px;
+            cursor: pointer;
+            background: #4a3f3a;
+            color: #fff;
+            transition: var(--transition);
+            box-shadow: 0 4px 14px rgba(60, 40, 30, 0.2);
+        }
+        .submit-btn:hover {
+            background: #5b4f49;
+            box-shadow: 0 6px 20px rgba(60, 40, 30, 0.28);
+            transform: translateY(-1px);
+        }
+        .submit-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 8px rgba(60, 40, 30, 0.2);
+        }
+        .validation-error {
+            color: var(--danger);
+            font-size: 0.8rem;
+            margin-top: 6px;
+            text-align: center;
+            font-weight: 500;
+            min-height: 20px;
+        }
+
+        /* 篩選列 */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 5px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .filter-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            background: transparent;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .filter-btn:hover {
+            color: #3e3640;
+            background: rgba(0, 0, 0, 0.03);
+        }
+        .filter-btn.active {
+            background: #4a3f3a;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(60, 40, 30, 0.2);
+        }
+        .filter-count {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 12px;
+            padding: 1px 9px;
+            font-size: 0.78rem;
+            margin-left: 4px;
+            font-weight: 500;
+        }
+        .filter-btn.active .filter-count {
+            background: rgba(255, 255, 255, 0.35);
+        }
+        .filter-btn:not(.active) .filter-count {
+            background: #e8e3dd;
+            color: #6b5e6b;
+        }
+
+        /* 列表區域 */
+        .records-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* 空狀態 */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-secondary);
+        }
+        .empty-state .icon {
+            font-size: 3.5rem;
+            display: block;
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
+        .empty-state p {
+            font-size: 0.95rem;
+            margin: 0;
+            letter-spacing: 0.03em;
+        }
+
+        /* 記錄卡片 */
+        .record-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px 22px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            animation: fadeInUp 0.35s ease-out;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .record-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+        /* 左側天氣圖示 */
+        .record-mood-icon {
+            flex-shrink: 0;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            background: #f8f6f3;
+            border: 2px solid #e8e3dd;
+            transition: var(--transition);
+        }
+        /* 各天氣圖示色 */
+        .record-card[data-mood="sunny"] .record-mood-icon {
+            background: var(--sunny-bg);
+            border-color: var(--sunny-border);
+        }
+        .record-card[data-mood="cloudy"] .record-mood-icon {
+            background: var(--cloudy-bg);
+            border-color: var(--cloudy-border);
+        }
+        .record-card[data-mood="rainy"] .record-mood-icon {
+            background: var(--rainy-bg);
+            border-color: var(--rainy-border);
+        }
+        .record-card[data-mood="thunder"] .record-mood-icon {
+            background: var(--thunder-bg);
+            border-color: var(--thunder-border);
+        }
+        .record-card[data-mood="rainbow"] .record-mood-icon {
+            background: var(--rainbow-bg);
+            border-color: var(--rainbow-border);
+        }
+
+        /* 卡片主體 */
+        .record-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .record-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+        .record-mood-label {
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.03em;
+        }
+        .record-intensity {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            background: #f5f0eb;
+            border-radius: 14px;
+            padding: 3px 12px;
+            font-weight: 500;
+        }
+        .intensity-dots {
+            display: inline-flex;
+            gap: 2px;
+        }
+        .intensity-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #d0c8c0;
+            transition: var(--transition);
+        }
+        .intensity-dot.filled {
+            background: #f0a04b;
+        }
+        .intensity-dot.filled.high {
+            background: #c0392b;
+        }
+        .record-diary {
+            font-size: 0.9rem;
+            color: #5a5050;
+            line-height: 1.5;
+            margin-top: 4px;
+            word-break: break-word;
+        }
+        .record-diary:empty {
+            display: none;
+        }
+        .record-time {
+            font-size: 0.73rem;
+            color: #b0a8a2;
+            margin-top: 6px;
+            letter-spacing: 0.02em;
+        }
+
+        /* 狀態與按鈕 */
+        .record-actions {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 16px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+        .status-badge.active {
+            background: #e8f5e9;
+            color: #3d7a4f;
+        }
+        .status-badge.done {
+            background: #f0edf5;
+            color: #6b5e8a;
+        }
+        .toggle-btn {
+            padding: 7px 16px;
+            border-radius: 18px;
+            border: 2px solid #d0c8c0;
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            transition: var(--transition);
+            white-space: nowrap;
+            color: #5a5050;
+        }
+        .toggle-btn:hover {
+            border-color: #a09890;
+            background: #faf8f6;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        .toggle-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* done 狀態卡片 */
+        .record-card.is-done {
+            background: #faf9f8;
+            border-color: #e8e3de;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
+        }
+        .record-card.is-done .record-mood-icon {
+            opacity: 0.55;
+            filter: grayscale(30%);
+        }
+        .record-card.is-done .record-mood-label,
+        .record-card.is-done .record-diary,
+        .record-card.is-done .record-intensity {
+            opacity: 0.6;
+        }
+        .record-card.is-done .record-time {
+            opacity: 0.5;
+        }
+        .record-card.is-done::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--done-overlay);
+            pointer-events: none;
+            border-radius: var(--radius);
+        }
+
+        /* 響應式 */
+        @media (max-width: 500px) {
+            .mood-options {
+                gap: 6px;
+            }
+            .mood-option {
+                min-width: 56px;
+                padding: 10px 4px 8px;
+            }
+            .mood-option .emoji {
+                font-size: 1.5rem;
+            }
+            .mood-option .label {
+                font-size: 0.72rem;
+            }
+            .record-card {
+                flex-direction: column;
+                gap: 10px;
+                padding: 16px;
+            }
+            .record-actions {
+                flex-direction: row;
+                align-items: center;
+                width: 100%;
+                justify-content: space-between;
+            }
+            .record-mood-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.4rem;
+            }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            .filter-btn {
+                font-size: 0.78rem;
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 頁首 -->
+        <header class="header">
+            <span class="header-icon">🌤️</span>
+            <h1>情緒氣象觀測站</h1>
+            <p class="subtitle">記錄每日內心天氣，追蹤情緒的陰晴圓缺</p>
+        </header>
+
+        <!-- 表單區域 -->
+        <div class="form-card" id="formCard">
+            <form id="recordForm" autocomplete="off">
+                <!-- 情緒天氣選擇 -->
+                <span class="form-section-label">🌡️ 今天的情緒天氣</span>
+                <div class="mood-options" id="moodOptions">
+                    <div class="mood-option" data-mood="sunny" tabindex="0" role="radio" aria-checked="false">
+                        <span class="emoji">☀️</span>
+                        <span class="label">晴</span>
+                    </div>
+                    <div class="mood-option" data-mood="cloudy" tabindex="0" role="radio" aria-checked="false">
+                        <span class="emoji">☁️</span>
+                        <span class="label">陰</span>
+                    </div>
+                    <div class="mood-option" data-mood="rainy" tabindex="0" role="radio" aria-checked="false">
+                        <span class="emoji">🌧️</span>
+                        <span class="label">雨</span>
+                    </div>
+                    <div class="mood-option" data-mood="thunder" tabindex="0" role="radio" aria-checked="false">
+                        <span class="emoji">⛈️</span>
+                        <span class="label">雷</span>
+                    </div>
+                    <div class="mood-option" data-mood="rainbow" tabindex="0" role="radio" aria-checked="false">
+                        <span class="emoji">🌈</span>
+                        <span class="label">彩虹</span>
+                    </div>
+                </div>
+                <input type="hidden" id="selectedMood" value="">
+
+                <!-- 情緒強度 -->
+                <div class="intensity-group">
+                    <span class="form-section-label">💪 情緒強度</span>
+                    <div class="intensity-row">
+                        <input type="range" id="intensityRange" min="1" max="10" value="5" step="1">
+                        <span class="intensity-value" id="intensityDisplay">5</span>
+                    </div>
+                    <div class="intensity-labels">
+                        <span>輕微 1</span>
+                        <span>強烈 10</span>
+                    </div>
+                </div>
+
+                <!-- 一句話日記 -->
+                <div class="diary-group">
+                    <span class="form-section-label">📝 一句話日記（選填）</span>
+                    <textarea id="diaryInput" maxlength="100" placeholder="寫下此刻的感受...（限 100 字）"></textarea>
+                    <div class="char-count" id="charCount">0 / 100 字</div>
+                </div>
+
+                <!-- 驗證錯誤提示 -->
+                <div class="validation-error" id="validationError"></div>
+
+                <!-- 提交按鈕 -->
+                <button type="submit" class="submit-btn">📡 記錄此刻情緒</button>
+            </form>
+        </div>
+
+        <!-- 篩選列 -->
+        <div class="filter-bar" id="filterBar">
+            <button class="filter-btn active" data-filter="all">
+                全部<span class="filter-count" id="countAll">0</span>
+            </button>
+            <button class="filter-btn" data-filter="active">
+                活躍中<span class="filter-count" id="countActive">0</span>
+            </button>
+            <button class="filter-btn" data-filter="done">
+                已回顧<span class="filter-count" id="countDone">0</span>
+            </button>
+        </div>
+
+        <!-- 記錄列表 -->
+        <div class="records-list" id="recordsList">
+            <!-- 動態渲染 -->
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ============ 常數與設定 ============
+            const STORAGE_KEY = 'records';
+            const MOOD_MAP = {
+                sunny: { label: '晴', emoji: '☀️', color: '#f0a04b' },
+                cloudy: { label: '陰', emoji: '☁️', color: '#8a8a8a' },
+                rainy: { label: '雨', emoji: '🌧️', color: '#5b8cb8' },
+                thunder: { label: '雷', emoji: '⛈️', color: '#6b4e8a' },
+                rainbow: { label: '彩虹', emoji: '🌈', color: '#e8788a' },
+            };
+            const VALID_MOODS = Object.keys(MOOD_MAP);
+
+            // ============ 全域狀態 ============
+            let records = [];
+            let currentFilter = 'all';
+            let selectedMood = '';
+
+            // ============ DOM 參照 ============
+            const form = document.getElementById('recordForm');
+            const moodOptionsContainer = document.getElementById('moodOptions');
+            const moodOptionElements = moodOptionsContainer.querySelectorAll('.mood-option');
+            const selectedMoodInput = document.getElementById('selectedMood');
+            const intensityRange = document.getElementById('intensityRange');
+            const intensityDisplay = document.getElementById('intensityDisplay');
+            const diaryInput = document.getElementById('diaryInput');
+            const charCount = document.getElementById('charCount');
+            const validationError = document.getElementById('validationError');
+            const recordsList = document.getElementById('recordsList');
+            const filterBar = document.getElementById('filterBar');
+            const filterButtons = filterBar.querySelectorAll('.filter-btn');
+            const countAll = document.getElementById('countAll');
+            const countActive = document.getElementById('countActive');
+            const countDone = document.getElementById('countDone');
+
+            // ============ 核心函式 ============
+
+            /**
+             * createRecord(formData)
+             * 根據表單內容建立一筆新 record object
+             * @param {Object} formData - { mood: string, intensity: number, diary: string }
+             * @returns {Object} 完整的 record object
+             */
+            function createRecord(formData) {
+                if (!formData.mood || !VALID_MOODS.includes(formData.mood)) {
+                    throw new Error('請選擇有效的情緒天氣');
+                }
+                if (typeof formData.intensity !== 'number' ||
+                    formData.intensity < 1 ||
+                    formData.intensity > 10 ||
+                    !Number.isInteger(formData.intensity)) {
+                    throw new Error('情緒強度必須是 1 到 10 之間的整數');
+                }
+                const diary = typeof formData.diary === 'string' ? formData.diary.trim().slice(0, 100) : '';
+
+                return {
+                    id: generateId(),
+                    createdAt: new Date().toISOString(),
+                    status: 'active',
+                    mood: formData.mood,
+                    intensity: formData.intensity,
+                    diary: diary,
+                };
+            }
+
+            /**
+             * saveData(record)
+             * 只負責新增一筆 record 到 records array，然後寫入 localStorage
+             * @param {Object} record - 要新增的 record
+             */
+            function saveData(record) {
+                records.push(record);
+                persistToStorage();
+            }
+
+            /**
+             * loadData()
+             * 從 localStorage 讀取 records array；沒有資料就回傳 []
+             * @returns {Array} records array
+             */
+            function loadData() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (!raw) return [];
+                    const parsed = JSON.parse(raw);
+                    if (!Array.isArray(parsed)) return [];
+                    // 過濾掉格式不正確的記錄
+                    return parsed.filter(isValidRecord);
+                } catch (e) {
+                    console.warn('loadData: 無法解析 localStorage 資料，回傳空陣列', e);
+                    return [];
+                }
+            }
+
+            /**
+             * updateRecord(id, changes)
+             * 只負責更新一筆 record，然後寫入 localStorage
+             * @param {string} id - 要更新的 record id
+             * @param {Object} changes - 要更新的欄位與值
+             * @returns {boolean} 是否成功更新
+             */
+            function updateRecord(id, changes) {
+                const index = records.findIndex((r) => r.id === id);
+                if (index === -1) return false;
+                // 只允許更新部分欄位（不覆蓋 id 與 createdAt）
+                const allowedKeys = ['status', 'mood', 'intensity', 'diary'];
+                const safeChanges = {};
+                for (const key of Object.keys(changes)) {
+                    if (allowedKeys.includes(key)) {
+                        safeChanges[key] = changes[key];
+                    }
+                }
+                // 驗證 status
+                if (safeChanges.status && !['active', 'done'].includes(safeChanges.status)) {
+                    return false;
+                }
+                // 驗證 mood
+                if (safeChanges.mood && !VALID_MOODS.includes(safeChanges.mood)) {
+                    return false;
+                }
+                // 驗證 intensity
+                if (safeChanges.intensity !== undefined) {
+                    if (typeof safeChanges.intensity !== 'number' ||
+                        safeChanges.intensity < 1 ||
+                        safeChanges.intensity > 10 ||
+                        !Number.isInteger(safeChanges.intensity)) {
+                        return false;
+                    }
+                }
+                records[index] = { ...records[index], ...safeChanges };
+                persistToStorage();
+                return true;
+            }
+
+            /**
+             * renderList(recordsToShow)
+             * 把 records 顯示到頁面
+             * @param {Array} recordsToShow - 要渲染的 records 陣列
+             */
+            function renderList(recordsToShow) {
+                if (!recordsToShow || recordsToShow.length === 0) {
+                    recordsList.innerHTML = `
+                            <div class="empty-state">
+                                <span class="icon">📭</span>
+                                <p>${records.length === 0
+                                    ? '還沒有情緒紀錄，快來記錄今天的心情吧～'
+                                    : '沒有符合條件的紀錄'}
+                                </p>
+                            </div>`;
+                    updateFilterCounts();
+                    return;
+                }
+
+                // 按建立時間倒序排列（最新的在前面）
+                const sorted = [...recordsToShow].sort((a, b) => new Date(b.createdAt) - new Date(a
+                    .createdAt));
+
+                const html = sorted.map((record) => buildRecordCardHTML(record)).join('');
+                recordsList.innerHTML = html;
+
+                // 綁定切換按鈕事件
+                recordsList.querySelectorAll('.toggle-btn').forEach((btn) => {
+                    btn.addEventListener('click', function() {
+                        const recordId = this.getAttribute('data-id');
+                        handleToggleStatus(recordId);
+                    });
+                });
+
+                updateFilterCounts();
+            }
+
+            // ============ 輔助函式 ============
+
+            /** 生成唯一 ID */
+            function generateId() {
+                if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+                    return crypto.randomUUID();
+                }
+                // fallback
+                return Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 11);
+            }
+
+            /** 驗證 record 格式是否正確 */
+            function isValidRecord(obj) {
+                if (!obj || typeof obj !== 'object') return false;
+                if (typeof obj.id !== 'string' || !obj.id) return false;
+                if (typeof obj.createdAt !== 'string' || !obj.createdAt) return false;
+                if (!['active', 'done'].includes(obj.status)) return false;
+                if (!VALID_MOODS.includes(obj.mood)) return false;
+                if (typeof obj.intensity !== 'number' || obj.intensity < 1 || obj.intensity > 10) return false;
+                if (obj.diary !== undefined && typeof obj.diary !== 'string') return false;
+                return true;
+            }
+
+            /** 將 records 寫入 localStorage */
+            function persistToStorage() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+                } catch (e) {
+                    console.error('persistToStorage: 寫入 localStorage 失敗', e);
+                }
+            }
+
+            /** 根據當前 filter 取得要顯示的 records */
+            function getFilteredRecords() {
+                if (currentFilter === 'all') return [...records];
+                return records.filter((r) => r.status === currentFilter);
+            }
+
+            /** 更新篩選按鈕上的數量 */
+            function updateFilterCounts() {
+                const total = records.length;
+                const activeCount = records.filter((r) => r.status === 'active').length;
+                const doneCount = records.filter((r) => r.status === 'done').length;
+                countAll.textContent = total;
+                countActive.textContent = activeCount;
+                countDone.textContent = doneCount;
+            }
+
+            /** 構建單張記錄卡片的 HTML */
+            function buildRecordCardHTML(record) {
+                const moodInfo = MOOD_MAP[record.mood] || { label: '未知', emoji: '❓', color: '#999' };
+                const isDone = record.status === 'done';
+                const doneClass = isDone ? ' is-done' : '';
+                const statusLabel = isDone ? '已回顧' : '活躍中';
+                const statusClass = isDone ? 'done' : 'active';
+                const toggleLabel = isDone ? '↩ 標記為活躍' : '✓ 標記為已回顧';
+                const diaryText = record.diary
+                    ? record.diary.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(
+                        /"/g, '&quot;').replace(/'/g, '&#39;')
+                    : '';
+                const timeStr = formatTime(record.createdAt);
+
+                // 強度點點
+                const dotsHTML = buildIntensityDots(record.intensity);
+
+                return `
+                    <div class="record-card${doneClass}" data-mood="${record.mood}" data-id="${record.id}">
+                        <div class="record-mood-icon">${moodInfo.emoji}</div>
+                        <div class="record-body">
+                            <div class="record-header">
+                                <span class="record-mood-label">${moodInfo.label}</span>
+                                <span class="record-intensity">
+                                    ${dotsHTML} ${record.intensity}/10
+                                </span>
+                            </div>
+                            ${diaryText ? `<p class="record-diary">${diaryText}</p>` : ''}
+                            <div class="record-time">📅 ${timeStr}</div>
+                        </div>
+                        <div class="record-actions">
+                            <span class="status-badge ${statusClass}">${statusLabel}</span>
+                            <button class="toggle-btn" data-id="${record.id}">${toggleLabel}</button>
+                        </div>
+                    </div>`;
+            }
+
+            /** 構建強度點點 HTML */
+            function buildIntensityDots(intensity) {
+                let dots = '';
+                for (let i = 1; i <= 10; i++) {
+                    if (i <= intensity) {
+                        const highClass = i >= 8 ? ' high' : '';
+                        dots += `<span class="intensity-dot filled${highClass}"></span>`;
+                    } else {
+                        dots += '<span class="intensity-dot"></span>';
+                    }
+                }
+                return `<span class="intensity-dots">${dots}</span>`;
+            }
+
+            /** 格式化時間字串 */
+            function formatTime(isoString) {
+                try {
+                    const d = new Date(isoString);
+                    if (isNaN(d.getTime())) return isoString;
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    const hours = String(d.getHours()).padStart(2, '0');
+                    const minutes = String(d.getMinutes()).padStart(2, '0');
+                    return `${year}/${month}/${day} ${hours}:${minutes}`;
+                } catch (e) {
+                    return isoString;
+                }
+            }
+
+            /** 取得當前表單資料 */
+            function getFormData() {
+                return {
+                    mood: selectedMood,
+                    intensity: parseInt(intensityRange.value, 10),
+                    diary: diaryInput.value.trim(),
+                };
+            }
+
+            /** 重置表單 */
+            function resetForm() {
+                // 清除天氣選擇
+                selectedMood = '';
+                selectedMoodInput.value = '';
+                moodOptionElements.forEach((el) => el.classList.remove('selected'));
+                // 重置強度
+                intensityRange.value = 5;
+                intensityDisplay.textContent = '5';
+                // 清空日記
+                diaryInput.value = '';
+                charCount.textContent = '0 / 100 字';
+                charCount.classList.remove('over');
+                // 清除錯誤訊息
+                validationError.textContent = '';
+            }
+
+            /** 驗證表單 */
+            function validateForm() {
+                const errors = [];
+                if (!selectedMood || !VALID_MOODS.includes(selectedMood)) {
+                    errors.push('請選擇一種情緒天氣');
+                }
+                const intensity = parseInt(intensityRange.value, 10);
+                if (isNaN(intensity) || intensity < 1 || intensity > 10) {
+                    errors.push('情緒強度必須在 1 到 10 之間');
+                }
+                if (diaryInput.value.length > 100) {
+                    errors.push('日記內容不可超過 100 字');
+                }
+                return errors;
+            }
+
+            // ============ 事件處理 ============
+
+            /** 處理天氣選擇 */
+            function handleMoodSelect(moodValue) {
+                selectedMood = moodValue;
+                selectedMoodInput.value = moodValue;
+                moodOptionElements.forEach((el) => {
+                    if (el.getAttribute('data-mood') === moodValue) {
+                        el.classList.add('selected');
+                        el.setAttribute('aria-checked', 'true');
+                    } else {
+                        el.classList.remove('selected');
+                        el.setAttribute('aria-checked', 'false');
+                    }
+                });
+                validationError.textContent = '';
+            }
+
+            /** 處理表單提交 */
+            function handleFormSubmit(e) {
+                e.preventDefault();
+
+                // 驗證
+                const errors = validateForm();
+                if (errors.length > 0) {
+                    validationError.textContent = errors.join('；');
+                    return;
+                }
+                validationError.textContent = '';
+
+                // 建立 record
+                let newRecord;
+                try {
+                    newRecord = createRecord(getFormData());
+                } catch (err) {
+                    validationError.textContent = err.message;
+                    return;
+                }
+
+                // 儲存
+                saveData(newRecord);
+
+                // 重置表單
+                resetForm();
+
+                // 重新渲染
+                renderList(getFilteredRecords());
+
+                // 滾動到新卡片（可選，讓使用者看到新增結果）
+                const firstCard = recordsList.querySelector('.record-card');
+                if (firstCard) {
+                    firstCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+
+            /** 處理狀態切換 */
+            function handleToggleStatus(id) {
+                const record = records.find((r) => r.id === id);
+                if (!record) return;
+                const newStatus = record.status === 'active' ? 'done' : 'active';
+                const success = updateRecord(id, { status: newStatus });
+                if (success) {
+                    renderList(getFilteredRecords());
+                }
+            }
+
+            /** 處理篩選切換 */
+            function handleFilterChange(filterValue) {
+                currentFilter = filterValue;
+                // 更新按鈕狀態
+                filterButtons.forEach((btn) => {
+                    if (btn.getAttribute('data-filter') === filterValue) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                // 重新渲染
+                renderList(getFilteredRecords());
+            }
+
+            // ============ 事件綁定 ============
+
+            // 天氣選擇點擊
+            moodOptionElements.forEach((option) => {
+                option.addEventListener('click', function() {
+                    const moodValue = this.getAttribute('data-mood');
+                    handleMoodSelect(moodValue);
+                });
+                // 鍵盤無障礙
+                option.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        const moodValue = this.getAttribute('data-mood');
+                        handleMoodSelect(moodValue);
+                    }
+                });
+            });
+
+            // 強度滑桿變化
+            intensityRange.addEventListener('input', function() {
+                const val = parseInt(this.value, 10);
+                intensityDisplay.textContent = val;
+                // 根據數值變換顏色
+                if (val <= 3) {
+                    intensityDisplay.style.color = '#5b8cb8';
+                } else if (val <= 6) {
+                    intensityDisplay.style.color = '#f0a04b';
+                } else if (val <= 8) {
+                    intensityDisplay.style.color = '#e8785a';
+                } else {
+                    intensityDisplay.style.color = '#c0392b';
+                }
+            });
+
+            // 日記字數統計
+            diaryInput.addEventListener('input', function() {
+                const len = this.value.length;
+                charCount.textContent = `${len} / 100 字`;
+                if (len > 100) {
+                    charCount.classList.add('over');
+                } else {
+                    charCount.classList.remove('over');
+                }
+            });
+
+            // 表單提交
+            form.addEventListener('submit', handleFormSubmit);
+
+            // 篩選按鈕
+            filterButtons.forEach((btn) => {
+                btn.addEventListener('click', function() {
+                    const filterValue = this.getAttribute('data-filter');
+                    handleFilterChange(filterValue);
+                });
+            });
+
+            // ============ 初始化 ============
+            function init() {
+                // 載入資料
+                records = loadData();
+                // 設定初始 filter 為 all
+                currentFilter = 'all';
+                // 渲染列表
+                renderList(getFilteredRecords());
+                // 初始化表單狀態
+                resetForm();
+                // 設定強度顯示初始顏色
+                intensityDisplay.style.color = '#f0a04b';
+            }
+
+            // 啟動
+            init();
+
+            console.log('🌤️ 情緒氣象觀測站已就緒');
+            console.log(`   - 已載入 ${records.length} 筆記錄`);
+            console.log('   - localStorage key:', STORAGE_KEY);
+        })();
+    </script>
+</body>
+</html>
