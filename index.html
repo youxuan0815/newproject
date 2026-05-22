@@ -14,7 +14,6 @@
       --accent: #ff7f50;
       --accent-glow: #ff9f70;
       --bottle: #c9e9d2;
-      --bottle-dark: #7ab89a;
       --sand: #f5e6d3;
       --rainbow-1: #ff6b6b;
       --rainbow-2: #ffa94d;
@@ -43,25 +42,13 @@
       background-image: radial-gradient(ellipse at 50% 0%, rgba(255,127,80,0.08) 0%, transparent 60%),
                         radial-gradient(ellipse at 80% 100%, rgba(116,192,252,0.06) 0%, transparent 50%);
     }
-    .app-container {
-      max-width: 800px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+    .app-container { max-width: 800px; width: 100%; display: flex; flex-direction: column; gap: 20px; }
 
-    /* 頁首 */
-    .header {
-      text-align: center;
-      padding: 20px 0 8px;
-    }
+    .header { text-align: center; padding: 20px 0 8px; }
     .header-icon { font-size: 3.2rem; display: block; margin-bottom: 4px; }
     .header h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: 0.03em; }
     .subtitle { color: var(--text-soft); font-size: 0.85rem; margin-top: 2px; }
-    .user-row {
-      display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px;
-    }
+    .user-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px; }
     .user-badge {
       background: var(--accent); color: #fff; padding: 6px 16px; border-radius: 20px;
       font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: var(--transition);
@@ -69,7 +56,6 @@
     .user-badge:hover { box-shadow: var(--shadow-glow); }
     .sync-status { font-size: 0.7rem; color: var(--text-soft); margin-top: 4px; min-height: 18px; }
 
-    /* Tab 導航 */
     .tab-nav {
       display: flex; gap: 4px; background: var(--surface); border-radius: 40px; padding: 5px;
       box-shadow: var(--shadow); border: 1px solid var(--border);
@@ -82,7 +68,6 @@
     .tab-btn.active { background: var(--accent); color: #fff; box-shadow: var(--shadow-glow); }
     .tab-btn:hover:not(.active) { color: #c0d0e0; background: rgba(255,255,255,0.04); }
 
-    /* 內容區 */
     .tab-content { display: none; flex-direction: column; gap: 18px; }
     .tab-content.active { display: flex; }
     .section-card {
@@ -93,8 +78,8 @@
       font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em;
       font-weight: 600; color: var(--text-soft); margin-bottom: 10px; display: block;
     }
+    .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; text-align: center; }
 
-    /* 情緒天氣選擇 (共通) */
     .mood-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
     .mood-option {
       flex: 1 1 60px; min-width: 60px; background: var(--card); border: 2px solid var(--border);
@@ -107,7 +92,6 @@
     .mood-option .label { font-size: 0.78rem; color: var(--text-soft); }
     .mood-option.selected .label { color: var(--accent-glow); font-weight: 700; }
 
-    /* 滑桿 */
     .intensity-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
     input[type="range"] {
       flex: 1; height: 6px; -webkit-appearance: none;
@@ -119,7 +103,6 @@
     }
     .intensity-badge { font-weight: 700; font-size: 1.1rem; min-width: 40px; text-align: center; }
 
-    /* 輸入框 */
     textarea {
       width: 100%; border: 2px solid var(--border); border-radius: var(--radius-md); padding: 12px;
       font-family: inherit; font-size: 0.9rem; resize: vertical; min-height: 70px;
@@ -137,7 +120,11 @@
     .btn-secondary:hover { border-color: var(--accent); background: rgba(255,127,80,0.05); }
     .validation-error { color: #ff6b6b; font-size: 0.75rem; margin-top: 6px; }
 
-    /* 篩選工具列 */
+    select {
+      width: 100%; padding: 10px; border-radius: 12px; background: var(--card); color: var(--text);
+      border: 2px solid var(--border); margin-bottom: 10px; font-family: inherit; font-size: 0.9rem;
+    }
+
     .toolbar {
       display: flex; gap: 6px; background: var(--surface); padding: 5px; border-radius: 32px;
       border: 1px solid var(--border);
@@ -149,7 +136,6 @@
     .filter-btn.active { background: var(--accent); color: #fff; }
     .sort-btn { margin-left: auto; background: #2a4060; }
 
-    /* 卡片列表 */
     .records-list { display: flex; flex-direction: column; gap: 12px; }
     .record-card {
       background: var(--card); border-radius: var(--radius-lg); padding: 16px 18px;
@@ -168,13 +154,9 @@
       font-size: 1rem; cursor: pointer; padding: 6px 10px; border-radius: 20px; transition: var(--transition);
     }
     .icon-btn:hover { background: rgba(255,127,80,0.12); border-color: var(--accent); color: #fff; }
-    .public-badge {
-      font-size: 0.65rem; padding: 3px 10px; border-radius: 12px; background: rgba(255,127,80,0.2); color: var(--accent-glow);
-      margin-left: 6px;
-    }
     .empty-message { text-align: center; padding: 40px; color: var(--text-soft); }
 
-    /* 漂流瓶卡片 */
+    /* 漂流瓶 */
     .bottle-card {
       background: linear-gradient(135deg, #1a3a4a, #0d2838); border-radius: 60px 60px 30px 30px;
       padding: 28px 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); border: 2px solid #3a6070;
@@ -187,10 +169,10 @@
     .bottle-card .bottle-mood { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; }
     .bottle-card .bottle-diary { font-size: 0.95rem; color: #c8d8e8; margin-bottom: 10px; font-style: italic; }
     .bottle-card .bottle-region { font-size: 0.7rem; color: #6a8090; }
-    .cheer-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+    .cheer-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
     .cheer-btn {
       background: rgba(255,255,255,0.06); border: 2px solid var(--border); color: #fff;
-      font-size: 1.2rem; padding: 10px 16px; border-radius: 28px; cursor: pointer; transition: var(--transition);
+      font-size: 1rem; padding: 10px 16px; border-radius: 28px; cursor: pointer; transition: var(--transition);
     }
     .cheer-btn:hover { border-color: var(--accent); box-shadow: var(--shadow-glow); transform: scale(1.05); }
     .cheer-btn.sent { background: var(--accent); border-color: var(--accent); animation: pulse 0.6s ease; }
@@ -200,15 +182,53 @@
     .world-map { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .continent-card {
       background: var(--card); border-radius: var(--radius-lg); padding: 16px;
-      border: 1px solid var(--border); text-align: center; cursor: pointer; transition: var(--transition);
-      min-height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      border: 1px solid var(--border); cursor: pointer; transition: var(--transition);
+      display: flex; flex-direction: column; gap: 8px;
     }
     .continent-card:hover { border-color: var(--accent); box-shadow: 0 0 20px rgba(255,127,80,0.15); }
-    .continent-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 6px; }
-    .continent-emojis { font-size: 1.6rem; letter-spacing: 2px; line-height: 1.6; }
-    .continent-count { font-size: 0.65rem; color: var(--text-soft); margin-top: 4px; }
+    .continent-header { display: flex; align-items: center; gap: 8px; }
+    .continent-flag { font-size: 1.8rem; }
+    .continent-name { font-weight: 700; font-size: 0.9rem; }
+    .continent-count { font-size: 0.65rem; color: var(--text-soft); margin-left: auto; }
+    .bar-chart { display: flex; flex-direction: column; gap: 3px; }
+    .bar-row { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; }
+    .bar-emoji { width: 22px; text-align: center; }
+    .bar-track { flex: 1; height: 10px; background: #1a2a40; border-radius: 5px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 5px; transition: width 0.5s ease; }
+    .bar-fill.sunny { background: #f5a623; }
+    .bar-fill.cloudy { background: #8e8e93; }
+    .bar-fill.rainy { background: #4a90d9; }
+    .bar-fill.thunder { background: #7b5ea7; }
+    .bar-fill.rainbow { background: linear-gradient(90deg, #ff6b6b, #ffa94d, #ffd43b, #69db7c, #74c0fc); }
+    .bar-pct { width: 32px; text-align: right; color: var(--text-soft); }
 
-    .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; text-align: center; }
+    /* Modal */
+    .modal-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-content {
+      background: var(--surface); border-radius: var(--radius-xl); padding: 24px;
+      max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid var(--border);
+    }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .modal-close {
+      background: none; border: none; color: var(--text-soft); font-size: 1.5rem; cursor: pointer;
+      padding: 4px 8px; border-radius: 8px; transition: var(--transition);
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .modal-bottle {
+      background: var(--card); border-radius: var(--radius-md); padding: 12px 14px;
+      border: 1px solid var(--border); margin-bottom: 8px;
+    }
+    .modal-bottle .bottle-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .modal-bottle .bottle-diary { font-size: 0.85rem; color: #c8d8e8; margin-bottom: 2px; }
+    .modal-bottle .bottle-time { font-size: 0.65rem; color: #6a8090; }
+
+    .world-loading { text-align: center; padding: 20px; color: var(--text-soft); }
+    .world-error { text-align: center; padding: 20px; color: #ff6b6b; }
 
     @media (max-width: 500px) {
       .tab-btn { font-size: 0.75rem; padding: 10px 6px; }
@@ -229,7 +249,6 @@
     <p class="sync-status" id="syncStatus">🟡 正在連接雲端...</p>
   </header>
 
-  <!-- Tab 導航 -->
   <nav class="tab-nav" id="tabNav">
     <button class="tab-btn active" data-tab="tab-diary">📔 我的日記</button>
     <button class="tab-btn" data-tab="tab-bottle">🫧 漂流瓶</button>
@@ -282,7 +301,7 @@
         <textarea id="bottleDiary" maxlength="100" placeholder="寫下想對世界說的話..."></textarea>
         <div class="char-count" id="bottleCharCount">0 / 100</div>
         <span class="section-label">🌍 你的地區</span>
-        <select id="bottleRegion" style="width:100%;padding:10px;border-radius:12px;background:var(--card);color:var(--text);border:2px solid var(--border);margin-bottom:10px;">
+        <select id="bottleRegion">
           <option value="asia">亞洲</option>
           <option value="europe">歐洲</option>
           <option value="north_america">北美洲</option>
@@ -300,6 +319,7 @@
         <p style="color:var(--text-soft);">點擊下方按鈕，隨機撈取一個來自世界的情緒瓶子</p>
       </div>
       <button class="btn btn-primary" id="fetchBottleBtn">🎣 撈取瓶子</button>
+      <p style="text-align:center;color:var(--text-soft);font-size:0.7rem;margin-top:8px;" id="seaStatus"></p>
     </div>
   </div>
 
@@ -307,10 +327,17 @@
   <div class="tab-content" id="tab-world">
     <div class="section-card">
       <span class="section-title">🌍 世界情緒氣象</span>
-      <p style="text-align:center;color:var(--text-soft);font-size:0.8rem;margin-bottom:14px;">點擊各大洲查看最新情緒</p>
-      <div class="world-map" id="worldMap"></div>
+      <p style="text-align:center;color:var(--text-soft);font-size:0.8rem;margin-bottom:14px;">點擊各大洲查看該地區的情緒瓶子</p>
+      <div id="worldLoading" class="world-loading">🟡 正在從雲端載入世界情緒資料...</div>
+      <div class="world-map" id="worldMap" style="display:none;"></div>
+      <div id="worldError" class="world-error" style="display:none;"></div>
     </div>
   </div>
+</div>
+
+<!-- Modal for continent detail -->
+<div class="modal-overlay" id="continentModal">
+  <div class="modal-content" id="continentModalContent"></div>
 </div>
 
 <script>
@@ -334,6 +361,7 @@
     asia: '🌏', europe: '🌍', north_america: '🌎',
     south_america: '🌎', africa: '🌍', oceania: '🏝️'
   };
+  const CONTINENTS = ['asia', 'europe', 'north_america', 'south_america', 'africa', 'oceania'];
 
   let records = [];
   let currentUser = null;
@@ -344,14 +372,15 @@
   let diaryEditingId = null;
   let bottleSelectedMood = '';
   let cloudAvailable = false;
+  let worldData = []; // 獨立的世界地圖資料
 
-  // DOM refs
+  // DOM
   const syncStatusEl = document.getElementById('syncStatus');
   const userBadge = document.getElementById('userBadge');
   const tabNav = document.getElementById('tabNav');
   const tabContents = document.querySelectorAll('.tab-content');
 
-  // Tab 1 refs
+  // Tab 1
   const diaryForm = document.getElementById('diaryForm');
   const diaryMoodGrid = document.getElementById('diaryMoodGrid');
   const diarySelectedMoodInput = document.getElementById('diarySelectedMood');
@@ -365,7 +394,7 @@
   const diaryToolbar = document.getElementById('diaryToolbar');
   const diarySortBtn = document.getElementById('diarySortBtn');
 
-  // Tab 2 refs
+  // Tab 2
   const bottleForm = document.getElementById('bottleForm');
   const bottleMoodGrid = document.getElementById('bottleMoodGrid');
   const bottleSelectedMoodInput = document.getElementById('bottleSelectedMood');
@@ -377,9 +406,14 @@
   const bottleError = document.getElementById('bottleError');
   const bottleDisplay = document.getElementById('bottleDisplay');
   const fetchBottleBtn = document.getElementById('fetchBottleBtn');
+  const seaStatus = document.getElementById('seaStatus');
 
-  // Tab 3 refs
+  // Tab 3
   const worldMap = document.getElementById('worldMap');
+  const worldLoading = document.getElementById('worldLoading');
+  const worldError = document.getElementById('worldError');
+  const continentModal = document.getElementById('continentModal');
+  const continentModalContent = document.getElementById('continentModalContent');
 
   // ========== 核心函式 ==========
   function createRecord(data) {
@@ -403,6 +437,8 @@
     records.push(record);
     persistLocal();
     syncToSheet({ action: "create", record });
+    updateSeaStatus();
+    if (currentTab === 'tab-world') loadWorldData();
   }
 
   function updateRecord(id, changes) {
@@ -411,6 +447,7 @@
     records[idx] = { ...records[idx], ...changes };
     persistLocal();
     syncToSheet({ action: "update", id, changes });
+    if (currentTab === 'tab-world') loadWorldData();
     return true;
   }
 
@@ -418,11 +455,14 @@
     records = records.filter(r => r.id !== id);
     persistLocal();
     syncToSheet({ action: "delete", id });
+    updateSeaStatus();
+    if (currentTab === 'tab-world') loadWorldData();
   }
 
   function loadData() {
     const local = loadFromLocal();
     records = local;
+    updateSeaStatus();
     fetchFromSheet().then(sheetRecords => {
       if (sheetRecords !== null) {
         records = sheetRecords;
@@ -441,16 +481,15 @@
     });
   }
 
-  // ========== Google Sheet 同步 ==========
+  // ========== Google Sheet ==========
   function syncToSheet(payload) {
     if (!APPS_SCRIPT_URL) return;
     fetch(APPS_SCRIPT_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain" },
       body: JSON.stringify(payload)
-    }).then(r => r.json()).then(d => {
-      if (!d.ok) console.warn('Sheet sync error:', d.error);
-    }).catch(e => console.warn('Sheet unreachable:', e.message));
+    }).then(r => r.json()).then(d => { if (!d.ok) console.warn('Sheet error:', d.error); })
+      .catch(e => console.warn('Sheet unreachable:', e.message));
   }
 
   async function fetchFromSheet() {
@@ -480,10 +519,8 @@
 
   // ========== localStorage ==========
   function loadFromLocal() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw).filter(r => r && r.id) : [];
-    } catch { return []; }
+    try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw).filter(r => r && r.id) : []; }
+    catch { return []; }
   }
   function persistLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); }
 
@@ -521,20 +558,25 @@
       });
     });
   }
+  function updateSeaStatus() {
+    const totalBottles = records.filter(r => r.isPublic).length;
+    const othersBottles = records.filter(r => r.isPublic && r.userId !== currentUser.id).length;
+    seaStatus.textContent = `🌊 大海中目前有 ${totalBottles} 個瓶子（其中 ${othersBottles} 個來自其他人）`;
+  }
 
-  // ========== 渲染 ==========
+  // ========== Tab 1 渲染 ==========
   function renderDiaryList(filtered) {
     const sorted = [...filtered].sort((a,b) => {
       return diarySortAsc ? new Date(a.createdAt)-new Date(b.createdAt) : new Date(b.createdAt)-new Date(a.createdAt);
     });
-    if (!sorted.length) { diaryList.innerHTML = '<div class="empty-message">📭 尚無日記</div>'; return; }
+    if (!sorted.length) { diaryList.innerHTML = '<div class="empty-message">📭 尚無私人日記</div>'; return; }
     diaryList.innerHTML = sorted.map(r => {
       const mood = MOODS[r.mood] || {};
       const doneClass = r.status === 'done' ? 'is-done' : '';
       return `<div class="record-card ${doneClass}">
         <div class="mood-icon">${mood.emoji||'❓'}</div>
         <div class="record-content">
-          <div class="record-meta"><span>${mood.label} · ${r.intensity}/10</span>${r.isPublic?'<span class="public-badge">🌐 公開</span>':''}</div>
+          <div class="record-meta"><span>${mood.label} · ${r.intensity}/10</span></div>
           <div class="record-diary">${escapeHtml(r.diary)||'⋯'}</div>
           <div class="record-time">${formatTime(r.createdAt)}</div>
         </div>
@@ -561,6 +603,34 @@
     }));
   }
 
+  function refreshDiary() {
+    // 只顯示自己的私人日記（isPublic: false）
+    const myDiaries = records.filter(r => r.userId === currentUser.id && !r.isPublic);
+    const filtered = diaryFilter === 'all' ? myDiaries : myDiaries.filter(r => r.status === diaryFilter);
+    renderDiaryList(filtered);
+  }
+
+  function startEditDiary(id) {
+    const r = records.find(x => x.id === id);
+    if (!r) return;
+    diarySelectedMood = r.mood; diarySelectedMoodInput.value = r.mood;
+    document.querySelectorAll('#diaryMoodGrid .mood-option').forEach(o => o.classList.toggle('selected', o.dataset.mood === r.mood));
+    diaryIntensity.value = r.intensity; diaryIntensityDisplay.textContent = r.intensity;
+    diaryText.value = r.diary; diaryCharCount.textContent = `${r.diary.length}/100`;
+    diaryEditingIdInput.value = r.id; diaryEditingId = r.id;
+    diaryError.textContent = '';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function resetDiaryForm() {
+    diarySelectedMood = ''; diarySelectedMoodInput.value = '';
+    document.querySelectorAll('#diaryMoodGrid .mood-option').forEach(o => o.classList.remove('selected'));
+    diaryIntensity.value = 5; diaryIntensityDisplay.textContent = '5';
+    diaryText.value = ''; diaryCharCount.textContent = '0/100';
+    diaryEditingIdInput.value = ''; diaryEditingId = null;
+    diaryError.textContent = '';
+  }
+
+  // ========== Tab 2 渲染 ==========
   function renderBottleDisplay(record) {
     if (!record) {
       bottleDisplay.innerHTML = '<p style="color:var(--text-soft);">點擊下方按鈕，隨機撈取一個來自世界的情緒瓶子</p>';
@@ -568,8 +638,6 @@
     }
     const mood = MOODS[record.mood] || {};
     const regionName = REGION_LABELS[record.region] || '未知';
-    let cheersArr = [];
-    try { cheersArr = JSON.parse(record.cheers || '[]'); } catch { cheersArr = []; }
     bottleDisplay.innerHTML = `
       <div class="bottle-card">
         <div class="bottle-neck"></div>
@@ -596,53 +664,6 @@
     });
   }
 
-  function renderWorldMap() {
-    const continents = ['asia', 'europe', 'north_america', 'south_america', 'africa', 'oceania'];
-    worldMap.innerHTML = continents.map(c => {
-      const regionRecords = records.filter(r => r.region === c && r.isPublic);
-      const moodCounts = {};
-      regionRecords.forEach(r => { moodCounts[r.mood] = (moodCounts[r.mood]||0)+1; });
-      const topEmojis = Object.entries(moodCounts).sort((a,b)=>b[1]-a[1]).slice(0,8)
-        .map(([m]) => MOODS[m]?.emoji || '').join(' ');
-      return `<div class="continent-card" data-region="${c}">
-        <span style="font-size:1.8rem;">${REGION_EMOJIS[c]}</span>
-        <span class="continent-name">${REGION_LABELS[c]}</span>
-        <span class="continent-emojis">${topEmojis || '⋯'}</span>
-        <span class="continent-count">${regionRecords.length} 個瓶子</span>
-      </div>`;
-    }).join('');
-  }
-
-  function refreshDiary() {
-    const filtered = diaryFilter === 'all' ? records.filter(r => !r.isPublic || r.userId === currentUser.id)
-      : records.filter(r => r.status === diaryFilter && (!r.isPublic || r.userId === currentUser.id));
-    renderDiaryList(filtered);
-  }
-  function refreshAll() {
-    refreshDiary();
-    renderWorldMap();
-    userBadge.textContent = `${currentUser.emoji} ${currentUser.name}`;
-  }
-
-  function startEditDiary(id) {
-    const r = records.find(x => x.id === id);
-    if (!r) return;
-    diarySelectedMood = r.mood; diarySelectedMoodInput.value = r.mood;
-    document.querySelectorAll('#diaryMoodGrid .mood-option').forEach(o => o.classList.toggle('selected', o.dataset.mood === r.mood));
-    diaryIntensity.value = r.intensity; diaryIntensityDisplay.textContent = r.intensity;
-    diaryText.value = r.diary; diaryCharCount.textContent = `${r.diary.length}/100`;
-    diaryEditingIdInput.value = r.id; diaryEditingId = r.id;
-    diaryError.textContent = '';
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
-  function resetDiaryForm() {
-    diarySelectedMood = ''; diarySelectedMoodInput.value = '';
-    document.querySelectorAll('#diaryMoodGrid .mood-option').forEach(o => o.classList.remove('selected'));
-    diaryIntensity.value = 5; diaryIntensityDisplay.textContent = '5';
-    diaryText.value = ''; diaryCharCount.textContent = '0/100';
-    diaryEditingIdInput.value = ''; diaryEditingId = null;
-    diaryError.textContent = '';
-  }
   function resetBottleForm() {
     bottleSelectedMood = ''; bottleSelectedMoodInput.value = '';
     document.querySelectorAll('#bottleMoodGrid .mood-option').forEach(o => o.classList.remove('selected'));
@@ -650,6 +671,135 @@
     bottleDiary.value = ''; bottleCharCount.textContent = '0/100';
     bottleError.textContent = '';
   }
+
+  // ========== Tab 3 渲染（方向一 + 方向四）==========
+  async function loadWorldData() {
+    worldLoading.style.display = 'block';
+    worldMap.style.display = 'none';
+    worldError.style.display = 'none';
+    try {
+      const sheetRecords = await fetchFromSheet();
+      if (sheetRecords !== null) {
+        worldData = sheetRecords.filter(r => r.isPublic);
+        cloudAvailable = true;
+      } else {
+        worldData = records.filter(r => r.isPublic);
+      }
+      if (!worldData.length) {
+        worldLoading.style.display = 'none';
+        worldMap.style.display = 'none';
+        worldError.style.display = 'block';
+        worldError.textContent = '🌊 目前還沒有公開的情緒瓶子，去投遞一個吧！';
+        return;
+      }
+      renderWorldMap(worldData);
+      worldLoading.style.display = 'none';
+      worldMap.style.display = 'grid';
+      worldError.style.display = 'none';
+    } catch {
+      worldData = records.filter(r => r.isPublic);
+      if (!worldData.length) {
+        worldLoading.style.display = 'none';
+        worldError.style.display = 'block';
+        worldError.textContent = '⚠️ 無法載入世界資料';
+        return;
+      }
+      renderWorldMap(worldData);
+      worldLoading.style.display = 'none';
+      worldMap.style.display = 'grid';
+      worldError.style.display = 'none';
+    }
+  }
+
+  function renderWorldMap(data) {
+    worldMap.innerHTML = CONTINENTS.map(continent => {
+      const regionRecords = data.filter(r => r.region === continent);
+      const total = regionRecords.length;
+      const moodCounts = {};
+      regionRecords.forEach(r => { moodCounts[r.mood] = (moodCounts[r.mood] || 0) + 1; });
+      const sortedMoods = Object.entries(moodCounts).sort((a, b) => b[1] - a[1]);
+
+      let barHTML = '';
+      if (total > 0) {
+        barHTML = sortedMoods.map(([mood, count]) => {
+          const pct = Math.round((count / total) * 100);
+          const moodInfo = MOODS[mood] || { emoji: '❓', label: '?' };
+          return `
+            <div class="bar-row">
+              <span class="bar-emoji">${moodInfo.emoji}</span>
+              <div class="bar-track"><div class="bar-fill ${mood}" style="width:${pct}%;"></div></div>
+              <span class="bar-pct">${pct}%</span>
+            </div>`;
+        }).join('');
+      } else {
+        barHTML = '<div class="bar-row"><span style="color:var(--text-soft);font-size:0.65rem;">尚無瓶子</span></div>';
+      }
+
+      return `
+        <div class="continent-card" data-continent="${continent}">
+          <div class="continent-header">
+            <span class="continent-flag">${REGION_EMOJIS[continent]}</span>
+            <span class="continent-name">${REGION_LABELS[continent]}</span>
+            <span class="continent-count">${total} 瓶</span>
+          </div>
+          <div class="bar-chart">${barHTML}</div>
+        </div>`;
+    }).join('');
+
+    // 綁定點擊事件 → 方向一：彈出瓶子列表
+    worldMap.querySelectorAll('.continent-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const continent = card.dataset.continent;
+        showContinentDetail(continent);
+      });
+    });
+  }
+
+  function showContinentDetail(continent) {
+    const regionRecords = worldData.filter(r => r.region === continent);
+    const regionName = REGION_LABELS[continent] || continent;
+    const regionEmoji = REGION_EMOJIS[continent] || '🌍';
+
+    if (!regionRecords.length) {
+      continentModalContent.innerHTML = `
+        <div class="modal-header">
+          <span>${regionEmoji} ${regionName}</span>
+          <button class="modal-close" id="modalClose">✕</button>
+        </div>
+        <p style="color:var(--text-soft);text-align:center;">這個地區還沒有任何情緒瓶子 🫧</p>`;
+    } else {
+      const sorted = [...regionRecords].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      continentModalContent.innerHTML = `
+        <div class="modal-header">
+          <span>${regionEmoji} ${regionName} · ${sorted.length} 個瓶子</span>
+          <button class="modal-close" id="modalClose">✕</button>
+        </div>
+        ${sorted.map(r => {
+          const mood = MOODS[r.mood] || {};
+          let cheersArr = [];
+          try { cheersArr = JSON.parse(r.cheers || '[]'); } catch { cheersArr = []; }
+          return `
+            <div class="modal-bottle">
+              <div class="bottle-header">
+                <span>${mood.emoji}</span>
+                <span>${mood.label} · ${r.intensity}/10</span>
+                ${cheersArr.length ? `<span style="font-size:0.65rem;color:var(--accent-glow);">${cheersArr.join(' ')} ×${cheersArr.length}</span>` : ''}
+              </div>
+              <div class="bottle-diary">${escapeHtml(r.diary) || '⋯'}</div>
+              <div class="bottle-time">${formatTime(r.createdAt)}</div>
+            </div>`;
+        }).join('')}`;
+    }
+
+    continentModal.classList.add('active');
+    document.getElementById('modalClose').addEventListener('click', () => {
+      continentModal.classList.remove('active');
+    });
+  }
+
+  continentModal.addEventListener('click', (e) => {
+    if (e.target === continentModal) continentModal.classList.remove('active');
+  });
 
   // ========== Tab 切換 ==========
   tabNav.querySelectorAll('.tab-btn').forEach(btn => {
@@ -659,12 +809,12 @@
       currentTab = btn.dataset.tab;
       tabContents.forEach(tc => tc.classList.remove('active'));
       document.getElementById(currentTab).classList.add('active');
-      if (currentTab === 'tab-world') renderWorldMap();
+      if (currentTab === 'tab-world') loadWorldData();
+      if (currentTab === 'tab-bottle') updateSeaStatus();
     });
   });
 
   // ========== 事件綁定 ==========
-  // Tab 1
   buildMoodGrid(diaryMoodGrid, (mood) => { diarySelectedMood = mood; diarySelectedMoodInput.value = mood; });
   diaryIntensity.addEventListener('input', e => { diaryIntensityDisplay.textContent = e.target.value; });
   diaryText.addEventListener('input', e => { diaryCharCount.textContent = `${e.target.value.length}/100`; });
@@ -694,7 +844,6 @@
     refreshDiary();
   });
 
-  // Tab 2
   buildMoodGrid(bottleMoodGrid, (mood) => { bottleSelectedMood = mood; bottleSelectedMoodInput.value = mood; });
   bottleIntensity.addEventListener('input', e => { bottleIntensityDisplay.textContent = e.target.value; });
   bottleDiary.addEventListener('input', e => { bottleCharCount.textContent = `${e.target.value.length}/100`; });
@@ -710,12 +859,19 @@
     saveData(record);
     resetBottleForm();
     bottleDisplay.innerHTML = '<p style="color:#69db7c;">✅ 你的瓶子已投向大海！</p>';
-    refreshAll();
+    updateSeaStatus();
+    refreshDiary();
   });
   fetchBottleBtn.addEventListener('click', () => {
     const publicRecords = records.filter(r => r.isPublic && r.userId !== currentUser.id);
+    updateSeaStatus();
     if (!publicRecords.length) {
-      bottleDisplay.innerHTML = '<p style="color:var(--text-soft);">🌊 大海中還沒有其他瓶子，快投遞一個吧！</p>';
+      const myBottles = records.filter(r => r.isPublic && r.userId === currentUser.id).length;
+      bottleDisplay.innerHTML = `<p style="color:var(--text-soft);">
+        🌊 大海中還沒有其他人的瓶子<br>
+        <small>目前大海中有 ${records.filter(r => r.isPublic).length} 個瓶子（其中 ${myBottles} 個是你投的）</small><br>
+        <small>分享這個頁面給朋友，邀請他們一起投遞吧！</small>
+      </p>`;
       return;
     }
     const random = publicRecords[Math.floor(Math.random() * publicRecords.length)];
@@ -723,6 +879,12 @@
   });
 
   // ========== 初始化 ==========
+  function refreshAll() {
+    refreshDiary();
+    updateSeaStatus();
+    userBadge.textContent = `${currentUser.emoji} ${currentUser.name}`;
+  }
+
   function init() {
     loadUser();
     buildMoodGrid(diaryMoodGrid, (mood) => { diarySelectedMood = mood; diarySelectedMoodInput.value = mood; });
