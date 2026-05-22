@@ -3,377 +3,217 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>情緒氣象觀測站 · 多人互動版</title>
+  <title>情緒氣象觀測站 · 全球情緒連結平台</title>
   <style>
     :root {
-      --bg: #f7f4f0;
-      --surface: #ffffff;
-      --text: #2e2a28;
-      --text-soft: #6b635e;
-      --border: #e0d9d2;
-      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04);
-      --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.06);
-      --radius-xl: 28px;
-      --radius-lg: 20px;
-      --radius-md: 14px;
-      --radius-sm: 10px;
-      --transition: 0.2s ease;
-      --sunny: #f5a623;
-      --sunny-bg: #fef7ed;
-      --cloudy: #8e8e93;
-      --cloudy-bg: #f4f4f6;
-      --rainy: #4a90d9;
-      --rainy-bg: #eef4fb;
-      --thunder: #7b5ea7;
-      --thunder-bg: #f4f0f8;
-      --rainbow: #e57373;
-      --rainbow-bg: #fef2f2;
-      --done-mask: rgba(255, 255, 255, 0.5);
-      --accent: #4a3f3a;
-      --accent-light: #f0ebe4;
+      --bg: #0f1a2e;
+      --surface: #16253e;
+      --card: #1e3550;
+      --text: #e0e8f0;
+      --text-soft: #8a9bb5;
+      --accent: #ff7f50;
+      --accent-glow: #ff9f70;
+      --bottle: #c9e9d2;
+      --bottle-dark: #7ab89a;
+      --sand: #f5e6d3;
+      --rainbow-1: #ff6b6b;
+      --rainbow-2: #ffa94d;
+      --rainbow-3: #ffd43b;
+      --rainbow-4: #69db7c;
+      --rainbow-5: #74c0fc;
+      --border: #2a4060;
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      --shadow-glow: 0 0 24px rgba(255, 127, 80, 0.25);
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'PingFang TC', 'Noto Sans TC', 'SF Pro Text', system-ui, -apple-system, sans-serif;
+      font-family: 'PingFang TC', 'Noto Sans TC', 'SF Pro Text', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.5;
       min-height: 100vh;
-      padding: 20px 16px 40px;
+      line-height: 1.5;
       display: flex;
       justify-content: center;
       align-items: flex-start;
+      padding: 16px;
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(255,127,80,0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 100%, rgba(116,192,252,0.06) 0%, transparent 50%);
     }
     .app-container {
-      max-width: 780px;
+      max-width: 800px;
       width: 100%;
-      margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 20px;
     }
+
+    /* 頁首 */
     .header {
       text-align: center;
-      padding: 16px 0 8px;
+      padding: 20px 0 8px;
     }
-    .header-icon {
-      font-size: 3.8rem;
-      display: block;
-      margin-bottom: 6px;
-      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.08));
+    .header-icon { font-size: 3.2rem; display: block; margin-bottom: 4px; }
+    .header h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: 0.03em; }
+    .subtitle { color: var(--text-soft); font-size: 0.85rem; margin-top: 2px; }
+    .user-row {
+      display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px;
     }
-    .header h1 {
-      font-size: 2.1rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      color: #3e342e;
+    .user-badge {
+      background: var(--accent); color: #fff; padding: 6px 16px; border-radius: 20px;
+      font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: var(--transition);
     }
-    .subtitle {
-      color: var(--text-soft);
-      font-size: 0.95rem;
-      margin-top: 4px;
+    .user-badge:hover { box-shadow: var(--shadow-glow); }
+    .sync-status { font-size: 0.7rem; color: var(--text-soft); margin-top: 4px; min-height: 18px; }
+
+    /* Tab 導航 */
+    .tab-nav {
+      display: flex; gap: 4px; background: var(--surface); border-radius: 40px; padding: 5px;
+      box-shadow: var(--shadow); border: 1px solid var(--border);
     }
-    .sync-status {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-soft);
-      margin-top: 2px;
-      min-height: 18px;
+    .tab-btn {
+      flex: 1; padding: 12px 10px; border: none; background: transparent; color: var(--text-soft);
+      border-radius: 32px; font-weight: 600; font-size: 0.9rem; cursor: pointer;
+      transition: var(--transition); white-space: nowrap; letter-spacing: 0.02em;
     }
-    .user-bar {
-      background: var(--surface);
-      border-radius: 60px;
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
-      flex-wrap: wrap;
-    }
-    .user-avatars {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      flex: 1;
-    }
-    .user-chip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 18px;
-      border-radius: 40px;
-      background: #f3efe9;
-      border: 1px solid transparent;
-      cursor: pointer;
-      font-weight: 500;
-      transition: var(--transition);
-      white-space: nowrap;
-    }
-    .user-chip.active {
-      background: #4a3f3a;
-      color: white;
-      border-color: #4a3f3a;
-      box-shadow: 0 4px 10px rgba(74,63,58,0.2);
-    }
-    .user-chip .emoji {
-      font-size: 1.2rem;
-    }
-    .add-user-btn {
-      background: white;
-      border: 2px dashed #c9c0b6;
-      border-radius: 40px;
-      width: 42px;
-      height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      cursor: pointer;
-      transition: var(--transition);
-      color: #8b8178;
-      margin-left: 4px;
-    }
-    .add-user-btn:hover {
-      border-color: #4a3f3a;
-      color: #4a3f3a;
-      background: #faf8f5;
-    }
-    .form-card {
-      background: var(--surface);
-      border-radius: var(--radius-xl);
-      padding: 24px 26px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
+    .tab-btn.active { background: var(--accent); color: #fff; box-shadow: var(--shadow-glow); }
+    .tab-btn:hover:not(.active) { color: #c0d0e0; background: rgba(255,255,255,0.04); }
+
+    /* 內容區 */
+    .tab-content { display: none; flex-direction: column; gap: 18px; }
+    .tab-content.active { display: flex; }
+    .section-card {
+      background: var(--surface); border-radius: var(--radius-xl); padding: 22px 24px;
+      box-shadow: var(--shadow); border: 1px solid var(--border);
     }
     .section-label {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-weight: 600;
-      color: var(--text-soft);
-      margin-bottom: 12px;
-      display: block;
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em;
+      font-weight: 600; color: var(--text-soft); margin-bottom: 10px; display: block;
     }
-    .mood-grid {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 22px;
-    }
+
+    /* 情緒天氣選擇 (共通) */
+    .mood-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
     .mood-option {
-      flex: 1 1 70px;
-      min-width: 70px;
-      background: #faf8f5;
-      border: 2px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 14px 6px 12px;
-      text-align: center;
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
+      flex: 1 1 60px; min-width: 60px; background: var(--card); border: 2px solid var(--border);
+      border-radius: var(--radius-md); padding: 12px 4px 10px; text-align: center; cursor: pointer;
+      transition: var(--transition); display: flex; flex-direction: column; align-items: center; gap: 4px;
     }
-    .mood-option.selected {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.06);
-    }
-    .mood-option .emoji {
-      font-size: 2rem;
-    }
-    .mood-option .label {
-      font-size: 0.85rem;
-      font-weight: 500;
-    }
-    .mood-option[data-mood="sunny"].selected { border-color: var(--sunny); background: var(--sunny-bg); }
-    .mood-option[data-mood="cloudy"].selected { border-color: var(--cloudy); background: var(--cloudy-bg); }
-    .mood-option[data-mood="rainy"].selected { border-color: var(--rainy); background: var(--rainy-bg); }
-    .mood-option[data-mood="thunder"].selected { border-color: var(--thunder); background: var(--thunder-bg); }
-    .mood-option[data-mood="rainbow"].selected { border-color: var(--rainbow); background: var(--rainbow-bg); }
-    .intensity-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
+    .mood-option:hover { border-color: #5a7a9a; transform: translateY(-2px); }
+    .mood-option.selected { border-color: var(--accent); box-shadow: 0 0 20px rgba(255,127,80,0.2); transform: translateY(-2px); }
+    .mood-option .emoji { font-size: 1.8rem; }
+    .mood-option .label { font-size: 0.78rem; color: var(--text-soft); }
+    .mood-option.selected .label { color: var(--accent-glow); font-weight: 700; }
+
+    /* 滑桿 */
+    .intensity-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
     input[type="range"] {
-      flex: 1;
-      height: 6px;
-      -webkit-appearance: none;
-      background: linear-gradient(to right, #d9cfc4, #f5a623, #c0392b);
-      border-radius: 4px;
+      flex: 1; height: 6px; -webkit-appearance: none;
+      background: linear-gradient(to right, #3a6080, var(--accent), #ff4444); border-radius: 4px;
     }
     input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 28px;
-      height: 28px;
-      background: white;
-      border: 3px solid #5b7a9a;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      cursor: pointer;
+      -webkit-appearance: none; width: 28px; height: 28px; background: #fff;
+      border: 3px solid var(--accent); border-radius: 50%; box-shadow: 0 4px 14px rgba(0,0,0,0.3); cursor: pointer;
     }
-    .intensity-badge {
-      font-weight: 700;
-      font-size: 1.2rem;
-      min-width: 44px;
-      text-align: center;
-    }
+    .intensity-badge { font-weight: 700; font-size: 1.1rem; min-width: 40px; text-align: center; }
+
+    /* 輸入框 */
     textarea {
-      width: 100%;
-      border: 2px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 14px;
-      font-family: inherit;
-      font-size: 0.95rem;
-      resize: vertical;
-      min-height: 75px;
-      background: #fcfbf9;
-      transition: var(--transition);
+      width: 100%; border: 2px solid var(--border); border-radius: var(--radius-md); padding: 12px;
+      font-family: inherit; font-size: 0.9rem; resize: vertical; min-height: 70px;
+      background: var(--card); color: var(--text); transition: var(--transition);
     }
-    textarea:focus {
-      border-color: #b1a79e;
-      outline: none;
-      background: white;
+    textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 14px rgba(255,127,80,0.1); }
+    .char-count { text-align: right; font-size: 0.65rem; color: var(--text-soft); }
+    .btn {
+      width: 100%; padding: 13px; border: none; border-radius: 32px; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: var(--transition); letter-spacing: 0.03em; margin-top: 10px;
     }
-    .char-count {
-      text-align: right;
-      font-size: 0.7rem;
-      color: var(--text-soft);
-    }
-    .submit-btn {
-      width: 100%;
-      margin-top: 14px;
-      padding: 14px;
-      background: #4a3f3a;
-      border: none;
-      color: white;
-      font-weight: 600;
-      border-radius: 40px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: var(--transition);
-      letter-spacing: 0.04em;
-    }
-    .submit-btn:hover { background: #5f524a; }
-    .validation-error {
-      color: #c0392b;
-      font-size: 0.8rem;
-      margin-top: 6px;
-    }
+    .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 18px rgba(255,127,80,0.3); }
+    .btn-primary:hover { background: #ff8f60; transform: translateY(-1px); }
+    .btn-secondary { background: transparent; border: 2px solid var(--border); color: var(--text); }
+    .btn-secondary:hover { border-color: var(--accent); background: rgba(255,127,80,0.05); }
+    .validation-error { color: #ff6b6b; font-size: 0.75rem; margin-top: 6px; }
+
+    /* 篩選工具列 */
     .toolbar {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      background: var(--surface);
-      padding: 6px;
-      border-radius: 50px;
-      box-shadow: var(--shadow-sm);
+      display: flex; gap: 6px; background: var(--surface); padding: 5px; border-radius: 32px;
       border: 1px solid var(--border);
     }
     .filter-btn, .sort-btn {
-      padding: 10px 18px;
-      border: none;
-      background: transparent;
-      border-radius: 30px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition);
-      font-size: 0.85rem;
+      padding: 8px 16px; border: none; background: transparent; color: var(--text-soft);
+      border-radius: 24px; font-weight: 500; cursor: pointer; transition: var(--transition); font-size: 0.8rem;
     }
-    .filter-btn.active { background: #4a3f3a; color: white; }
-    .sort-btn { margin-left: auto; background: #f3efe9; }
-    .records-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+    .filter-btn.active { background: var(--accent); color: #fff; }
+    .sort-btn { margin-left: auto; background: #2a4060; }
+
+    /* 卡片列表 */
+    .records-list { display: flex; flex-direction: column; gap: 12px; }
     .record-card {
-      background: var(--surface);
-      border-radius: var(--radius-lg);
-      padding: 18px 20px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      transition: var(--transition);
-      position: relative;
+      background: var(--card); border-radius: var(--radius-lg); padding: 16px 18px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2); border: 1px solid var(--border);
+      display: flex; gap: 14px; align-items: center; transition: var(--transition); position: relative;
     }
-    .record-card.is-done {
-      background: #f9f7f5;
-      border-color: #e7e0d8;
-    }
-    .record-card.is-done .mood-icon {
-      opacity: 0.6;
-    }
-    .mood-icon {
-      font-size: 2.4rem;
-      width: 52px;
-      text-align: center;
-    }
-    .record-content {
-      flex: 1;
-    }
-    .record-meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 4px;
-    }
-    .record-user {
-      background: #f0ebe4;
-      border-radius: 20px;
-      padding: 2px 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-    .record-diary {
-      font-size: 0.92rem;
-      color: #4a3f3a;
-    }
-    .record-time {
-      font-size: 0.7rem;
-      color: #a79e96;
-    }
-    .record-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: flex-end;
-    }
-    .status-badge {
-      font-size: 0.7rem;
-      padding: 4px 12px;
-      border-radius: 14px;
-      background: #e8f5e9;
-      color: #2e6b3a;
-    }
-    .status-badge.done { background: #f0edf5; color: #5e4b7a; }
+    .record-card.is-done { opacity: 0.55; border-color: #2a3040; }
+    .mood-icon { font-size: 2.2rem; width: 48px; text-align: center; flex-shrink: 0; }
+    .record-content { flex: 1; min-width: 0; }
+    .record-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
+    .record-diary { font-size: 0.88rem; color: #c8d8e8; word-break: break-word; }
+    .record-time { font-size: 0.68rem; color: #6a8090; margin-top: 2px; }
+    .record-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
     .icon-btn {
-      background: none;
-      border: none;
-      font-size: 1.1rem;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 8px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-soft);
+      font-size: 1rem; cursor: pointer; padding: 6px 10px; border-radius: 20px; transition: var(--transition);
     }
-    .icon-btn:hover { background: #eee; }
-    .empty-message {
-      text-align: center;
-      padding: 48px;
-      color: var(--text-soft);
+    .icon-btn:hover { background: rgba(255,127,80,0.12); border-color: var(--accent); color: #fff; }
+    .public-badge {
+      font-size: 0.65rem; padding: 3px 10px; border-radius: 12px; background: rgba(255,127,80,0.2); color: var(--accent-glow);
+      margin-left: 6px;
     }
+    .empty-message { text-align: center; padding: 40px; color: var(--text-soft); }
+
+    /* 漂流瓶卡片 */
+    .bottle-card {
+      background: linear-gradient(135deg, #1a3a4a, #0d2838); border-radius: 60px 60px 30px 30px;
+      padding: 28px 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); border: 2px solid #3a6070;
+      text-align: center; position: relative; max-width: 360px; margin: 0 auto; width: 100%;
+    }
+    .bottle-card .bottle-neck {
+      width: 50px; height: 22px; background: #3a6070; border-radius: 10px 10px 0 0; margin: -10px auto 10px;
+    }
+    .bottle-card .bottle-emoji { font-size: 3.5rem; display: block; margin-bottom: 8px; }
+    .bottle-card .bottle-mood { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; }
+    .bottle-card .bottle-diary { font-size: 0.95rem; color: #c8d8e8; margin-bottom: 10px; font-style: italic; }
+    .bottle-card .bottle-region { font-size: 0.7rem; color: #6a8090; }
+    .cheer-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+    .cheer-btn {
+      background: rgba(255,255,255,0.06); border: 2px solid var(--border); color: #fff;
+      font-size: 1.2rem; padding: 10px 16px; border-radius: 28px; cursor: pointer; transition: var(--transition);
+    }
+    .cheer-btn:hover { border-color: var(--accent); box-shadow: var(--shadow-glow); transform: scale(1.05); }
+    .cheer-btn.sent { background: var(--accent); border-color: var(--accent); animation: pulse 0.6s ease; }
+    @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+
+    /* 世界地圖 */
+    .world-map { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .continent-card {
+      background: var(--card); border-radius: var(--radius-lg); padding: 16px;
+      border: 1px solid var(--border); text-align: center; cursor: pointer; transition: var(--transition);
+      min-height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .continent-card:hover { border-color: var(--accent); box-shadow: 0 0 20px rgba(255,127,80,0.15); }
+    .continent-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 6px; }
+    .continent-emojis { font-size: 1.6rem; letter-spacing: 2px; line-height: 1.6; }
+    .continent-count { font-size: 0.65rem; color: var(--text-soft); margin-top: 4px; }
+
+    .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; text-align: center; }
+
     @media (max-width: 500px) {
+      .tab-btn { font-size: 0.75rem; padding: 10px 6px; }
       .record-card { flex-wrap: wrap; }
-      .record-actions { flex-direction: row; width: 100%; justify-content: flex-end; }
+      .world-map { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -382,400 +222,532 @@
   <header class="header">
     <span class="header-icon">🌤️</span>
     <h1>情緒氣象觀測站</h1>
-    <p class="subtitle">多人共感 · 記錄每個人的內心天氣</p>
+    <p class="subtitle">把你的心情投向世界，撈起陌生人的溫暖</p>
+    <div class="user-row">
+      <span class="user-badge" id="userBadge">🙂 匿名旅人</span>
+    </div>
     <p class="sync-status" id="syncStatus">🟡 正在連接雲端...</p>
   </header>
 
-  <div class="user-bar" id="userBar">
-    <div class="user-avatars" id="userList"></div>
-    <button class="add-user-btn" id="addUserBtn" title="新增使用者">+</button>
+  <!-- Tab 導航 -->
+  <nav class="tab-nav" id="tabNav">
+    <button class="tab-btn active" data-tab="tab-diary">📔 我的日記</button>
+    <button class="tab-btn" data-tab="tab-bottle">🫧 漂流瓶</button>
+    <button class="tab-btn" data-tab="tab-world">🌍 世界情緒</button>
+  </nav>
+
+  <!-- Tab 1: 個人日記 -->
+  <div class="tab-content active" id="tab-diary">
+    <div class="section-card">
+      <form id="diaryForm" autocomplete="off">
+        <span class="section-label">🌡️ 情緒天氣</span>
+        <div class="mood-grid" id="diaryMoodGrid"></div>
+        <input type="hidden" id="diarySelectedMood" value="">
+        <span class="section-label">💪 強度</span>
+        <div class="intensity-row">
+          <input type="range" id="diaryIntensity" min="1" max="10" value="5" step="1">
+          <span class="intensity-badge" id="diaryIntensityDisplay">5</span>
+        </div>
+        <span class="section-label">📝 一句話日記</span>
+        <textarea id="diaryText" maxlength="100" placeholder="寫下此刻的感受..."></textarea>
+        <div class="char-count" id="diaryCharCount">0 / 100</div>
+        <div class="validation-error" id="diaryError"></div>
+        <button type="submit" class="btn btn-primary">📡 記錄情緒</button>
+        <input type="hidden" id="diaryEditingId" value="">
+      </form>
+    </div>
+    <div class="toolbar" id="diaryToolbar">
+      <button class="filter-btn active" data-filter="all">全部</button>
+      <button class="filter-btn" data-filter="active">活躍中</button>
+      <button class="filter-btn" data-filter="done">已回顧</button>
+      <button class="sort-btn" id="diarySortBtn">🕒 最新 ⇄ 最舊</button>
+    </div>
+    <div id="diaryList" class="records-list"></div>
   </div>
 
-  <div class="form-card">
-    <form id="recordForm" autocomplete="off">
-      <span class="section-label">🌡️ 情緒天氣</span>
-      <div class="mood-grid" id="moodGrid"></div>
-      <input type="hidden" id="selectedMood" value="">
-
-      <span class="section-label">💪 強度</span>
-      <div class="intensity-row">
-        <input type="range" id="intensityRange" min="1" max="10" value="5" step="1">
-        <span class="intensity-badge" id="intensityDisplay">5</span>
+  <!-- Tab 2: 漂流瓶 -->
+  <div class="tab-content" id="tab-bottle">
+    <div class="section-card" style="text-align:center;">
+      <span class="section-title">🫧 把你的心情裝進瓶子，投向大海</span>
+      <form id="bottleForm" autocomplete="off">
+        <span class="section-label">🌡️ 情緒天氣</span>
+        <div class="mood-grid" id="bottleMoodGrid"></div>
+        <input type="hidden" id="bottleSelectedMood" value="">
+        <span class="section-label">💪 強度</span>
+        <div class="intensity-row">
+          <input type="range" id="bottleIntensity" min="1" max="10" value="5" step="1">
+          <span class="intensity-badge" id="bottleIntensityDisplay">5</span>
+        </div>
+        <span class="section-label">📝 瓶中信</span>
+        <textarea id="bottleDiary" maxlength="100" placeholder="寫下想對世界說的話..."></textarea>
+        <div class="char-count" id="bottleCharCount">0 / 100</div>
+        <span class="section-label">🌍 你的地區</span>
+        <select id="bottleRegion" style="width:100%;padding:10px;border-radius:12px;background:var(--card);color:var(--text);border:2px solid var(--border);margin-bottom:10px;">
+          <option value="asia">亞洲</option>
+          <option value="europe">歐洲</option>
+          <option value="north_america">北美洲</option>
+          <option value="south_america">南美洲</option>
+          <option value="africa">非洲</option>
+          <option value="oceania">大洋洲</option>
+        </select>
+        <div class="validation-error" id="bottleError"></div>
+        <button type="submit" class="btn btn-primary">🫧 投向大海</button>
+      </form>
+    </div>
+    <div class="section-card" style="text-align:center;">
+      <span class="section-title">🐚 撈取一個陌生人的瓶子</span>
+      <div id="bottleDisplay">
+        <p style="color:var(--text-soft);">點擊下方按鈕，隨機撈取一個來自世界的情緒瓶子</p>
       </div>
-
-      <span class="section-label">📝 一句話日記</span>
-      <textarea id="diaryInput" maxlength="100" placeholder="寫下此刻的感受..."></textarea>
-      <div class="char-count" id="charCount">0 / 100</div>
-      <div class="validation-error" id="validationError"></div>
-      <button type="submit" class="submit-btn">📡 記錄情緒</button>
-      <input type="hidden" id="editingId" value="">
-    </form>
+      <button class="btn btn-primary" id="fetchBottleBtn">🎣 撈取瓶子</button>
+    </div>
   </div>
 
-  <div class="toolbar">
-    <button class="filter-btn active" data-filter="all">全部</button>
-    <button class="filter-btn" data-filter="active">活躍中</button>
-    <button class="filter-btn" data-filter="done">已回顧</button>
-    <button class="sort-btn" id="sortBtn">🕒 最新 ⇄ 最舊</button>
+  <!-- Tab 3: 世界情緒地圖 -->
+  <div class="tab-content" id="tab-world">
+    <div class="section-card">
+      <span class="section-title">🌍 世界情緒氣象</span>
+      <p style="text-align:center;color:var(--text-soft);font-size:0.8rem;margin-bottom:14px;">點擊各大洲查看最新情緒</p>
+      <div class="world-map" id="worldMap"></div>
+    </div>
   </div>
-
-  <div id="recordsList" class="records-list"></div>
 </div>
 
 <script>
-  (() => {
-    // ========== 常數 ==========
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfKod0AKQVH_BAcrhSICqSf1cZy_SIdQeJwFLkDN8yLGaPtqvZaP_8CP4G7bQCG3scwQ/exec";
-    const STORAGE_KEY = 'records';
-    const USERS_KEY = 'moodUsers';
-    const MOODS = {
-      sunny: { label: '晴', emoji: '☀️' },
-      cloudy: { label: '陰', emoji: '☁️' },
-      rainy: { label: '雨', emoji: '🌧️' },
-      thunder: { label: '雷', emoji: '⛈️' },
-      rainbow: { label: '彩虹', emoji: '🌈' }
+(() => {
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfKod0AKQVH_BAcrhSICqSf1cZy_SIdQeJwFLkDN8yLGaPtqvZaP_8CP4G7bQCG3scwQ/exec";
+  const STORAGE_KEY = 'records';
+  const USER_KEY = 'moodUser';
+  const MOODS = {
+    sunny: { label: '晴', emoji: '☀️' },
+    cloudy: { label: '陰', emoji: '☁️' },
+    rainy: { label: '雨', emoji: '🌧️' },
+    thunder: { label: '雷', emoji: '⛈️' },
+    rainbow: { label: '彩虹', emoji: '🌈' }
+  };
+  const VALID_MOODS = Object.keys(MOODS);
+  const REGION_LABELS = {
+    asia: '亞洲', europe: '歐洲', north_america: '北美洲',
+    south_america: '南美洲', africa: '非洲', oceania: '大洋洲'
+  };
+  const REGION_EMOJIS = {
+    asia: '🌏', europe: '🌍', north_america: '🌎',
+    south_america: '🌎', africa: '🌍', oceania: '🏝️'
+  };
+
+  let records = [];
+  let currentUser = null;
+  let currentTab = 'tab-diary';
+  let diaryFilter = 'all';
+  let diarySortAsc = false;
+  let diarySelectedMood = '';
+  let diaryEditingId = null;
+  let bottleSelectedMood = '';
+  let cloudAvailable = false;
+
+  // DOM refs
+  const syncStatusEl = document.getElementById('syncStatus');
+  const userBadge = document.getElementById('userBadge');
+  const tabNav = document.getElementById('tabNav');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  // Tab 1 refs
+  const diaryForm = document.getElementById('diaryForm');
+  const diaryMoodGrid = document.getElementById('diaryMoodGrid');
+  const diarySelectedMoodInput = document.getElementById('diarySelectedMood');
+  const diaryIntensity = document.getElementById('diaryIntensity');
+  const diaryIntensityDisplay = document.getElementById('diaryIntensityDisplay');
+  const diaryText = document.getElementById('diaryText');
+  const diaryCharCount = document.getElementById('diaryCharCount');
+  const diaryError = document.getElementById('diaryError');
+  const diaryEditingIdInput = document.getElementById('diaryEditingId');
+  const diaryList = document.getElementById('diaryList');
+  const diaryToolbar = document.getElementById('diaryToolbar');
+  const diarySortBtn = document.getElementById('diarySortBtn');
+
+  // Tab 2 refs
+  const bottleForm = document.getElementById('bottleForm');
+  const bottleMoodGrid = document.getElementById('bottleMoodGrid');
+  const bottleSelectedMoodInput = document.getElementById('bottleSelectedMood');
+  const bottleIntensity = document.getElementById('bottleIntensity');
+  const bottleIntensityDisplay = document.getElementById('bottleIntensityDisplay');
+  const bottleDiary = document.getElementById('bottleDiary');
+  const bottleCharCount = document.getElementById('bottleCharCount');
+  const bottleRegion = document.getElementById('bottleRegion');
+  const bottleError = document.getElementById('bottleError');
+  const bottleDisplay = document.getElementById('bottleDisplay');
+  const fetchBottleBtn = document.getElementById('fetchBottleBtn');
+
+  // Tab 3 refs
+  const worldMap = document.getElementById('worldMap');
+
+  // ========== 核心函式 ==========
+  function createRecord(data) {
+    if (!data.mood || !VALID_MOODS.includes(data.mood)) throw new Error('請選擇情緒天氣');
+    if (typeof data.intensity !== 'number' || data.intensity < 1 || data.intensity > 10) throw new Error('強度1-10');
+    return {
+      id: crypto.randomUUID ? crypto.randomUUID() : Date.now()+'-'+Math.random().toString(36),
+      createdAt: new Date().toISOString(),
+      status: data.status || 'active',
+      userId: currentUser.id,
+      mood: data.mood,
+      intensity: data.intensity,
+      diary: (data.diary || '').trim().slice(0,100),
+      isPublic: data.isPublic !== undefined ? data.isPublic : false,
+      region: data.region || '',
+      cheers: data.cheers || '[]'
     };
-    const VALID_MOODS = Object.keys(MOODS);
+  }
 
-    // 狀態
-    let records = [];
-    let users = [];
-    let currentUserId = null;
-    let currentFilter = 'all';
-    let sortAsc = false;
-    let selectedMood = '';
-    let editingId = null;
-    let cloudAvailable = false;
+  function saveData(record) {
+    records.push(record);
+    persistLocal();
+    syncToSheet({ action: "create", record });
+  }
 
-    // DOM
-    const syncStatusEl = document.getElementById('syncStatus');
-    const userListEl = document.getElementById('userList');
-    const addUserBtn = document.getElementById('addUserBtn');
-    const moodGrid = document.getElementById('moodGrid');
-    const selectedMoodInput = document.getElementById('selectedMood');
-    const intensityRange = document.getElementById('intensityRange');
-    const intensityDisplay = document.getElementById('intensityDisplay');
-    const diaryInput = document.getElementById('diaryInput');
-    const charCount = document.getElementById('charCount');
-    const validationError = document.getElementById('validationError');
-    const editingIdInput = document.getElementById('editingId');
-    const recordsListEl = document.getElementById('recordsList');
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const sortBtn = document.getElementById('sortBtn');
-    const form = document.getElementById('recordForm');
+  function updateRecord(id, changes) {
+    const idx = records.findIndex(r => r.id === id);
+    if (idx === -1) return false;
+    records[idx] = { ...records[idx], ...changes };
+    persistLocal();
+    syncToSheet({ action: "update", id, changes });
+    return true;
+  }
 
-    // ========== 核心函式 ==========
-    function createRecord(formData) {
-      if (!formData.mood || !VALID_MOODS.includes(formData.mood)) throw new Error('請選擇情緒天氣');
-      if (typeof formData.intensity !== 'number' || formData.intensity < 1 || formData.intensity > 10) throw new Error('強度1-10');
-      return {
-        id: crypto.randomUUID ? crypto.randomUUID() : Date.now()+'-'+Math.random().toString(36),
-        createdAt: new Date().toISOString(),
-        status: 'active',
-        userId: currentUserId,
-        mood: formData.mood,
-        intensity: formData.intensity,
-        diary: (formData.diary || '').trim().slice(0,100)
-      };
-    }
+  function deleteRecord(id) {
+    records = records.filter(r => r.id !== id);
+    persistLocal();
+    syncToSheet({ action: "delete", id });
+  }
 
-    function saveData(record) {
-      records.push(record);
-      persistToLocalStorage();
-      syncToSheet({ action: "create", record: record });
-    }
-
-    function loadData() {
-      // 先從 localStorage 載入作為立即顯示的資料
-      const localRecords = loadFromLocalStorage();
-      records = localRecords;
-      // 非同步從雲端拉取最新資料
-      fetchRecordsFromSheet().then(sheetRecords => {
-        if (sheetRecords !== null) {
-          records = sheetRecords;
-          cloudAvailable = true;
-          syncStatusEl.textContent = '🟢 雲端已同步';
-          persistToLocalStorage(); // 更新 localStorage
-        } else {
-          cloudAvailable = false;
-          syncStatusEl.textContent = '🟠 無法連接雲端，使用離線資料';
-        }
-        refreshView();
-      }).catch(() => {
-        cloudAvailable = false;
-        syncStatusEl.textContent = '🔴 雲端離線，使用本地資料';
-        refreshView();
-      });
-      return records;
-    }
-
-    function updateRecord(id, changes) {
-      const index = records.findIndex(r => r.id === id);
-      if (index === -1) return false;
-      records[index] = { ...records[index], ...changes };
-      persistToLocalStorage();
-      syncToSheet({ action: "update", id: id, changes: changes });
-      return true;
-    }
-
-    function renderList(recordsToShow) {
-      const sorted = [...recordsToShow].sort((a,b) => {
-        const da = new Date(a.createdAt), db = new Date(b.createdAt);
-        return sortAsc ? da - db : db - da;
-      });
-      if (!sorted.length) {
-        recordsListEl.innerHTML = `<div class="empty-message">📭 尚無紀錄</div>`;
-        return;
-      }
-      recordsListEl.innerHTML = sorted.map(r => {
-        const user = users.find(u => u.id === r.userId) || { name: '匿名', emoji: '👤' };
-        const mood = MOODS[r.mood] || {};
-        const doneClass = r.status === 'done' ? 'is-done' : '';
-        return `<div class="record-card ${doneClass}" data-id="${r.id}">
-          <div class="mood-icon">${mood.emoji || '❓'}</div>
-          <div class="record-content">
-            <div class="record-meta">
-              <span class="record-user">${user.emoji} ${user.name}</span>
-              <span>${mood.label} · ${r.intensity}/10</span>
-            </div>
-            <div class="record-diary">${escapeHtml(r.diary) || '⋯'}</div>
-            <div class="record-time">${formatTime(r.createdAt)}</div>
-          </div>
-          <div class="record-actions">
-            <span class="status-badge ${r.status === 'done' ? 'done' : ''}">${r.status==='done'?'已回顧':'活躍'}</span>
-            <div style="display:flex;gap:6px;">
-              <button class="icon-btn toggle-status" data-id="${r.id}">${r.status==='done'?'↩️':'✅'}</button>
-              <button class="icon-btn edit-record" data-id="${r.id}">✏️</button>
-              <button class="icon-btn delete-record" data-id="${r.id}">🗑️</button>
-            </div>
-          </div>
-        </div>`;
-      }).join('');
-
-      document.querySelectorAll('.toggle-status').forEach(b => b.addEventListener('click', (e) => {
-        const id = e.currentTarget.dataset.id;
-        const rec = records.find(r=>r.id===id);
-        if(rec) updateRecord(id, {status: rec.status==='active'?'done':'active'});
-        refreshView();
-      }));
-      document.querySelectorAll('.edit-record').forEach(b => b.addEventListener('click', (e) => {
-        startEdit(e.currentTarget.dataset.id);
-      }));
-      document.querySelectorAll('.delete-record').forEach(b => b.addEventListener('click', (e) => {
-        if(confirm('確定刪除這筆紀錄嗎？')) {
-          records = records.filter(r => r.id !== e.currentTarget.dataset.id);
-          persistToLocalStorage();
-          refreshView();
-        }
-      }));
-    }
-
-    // ========== Google Sheet 同步函式 ==========
-
-    function syncToSheet(payload) {
-      if (!APPS_SCRIPT_URL) return;
-      fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.ok) {
-          console.log('📡 已同步到 Google Sheet:', payload.action);
-        } else {
-          console.warn('⚠️ Sheet 同步失敗:', data.error);
-        }
-      })
-      .catch(err => {
-        console.warn('⚠️ 無法連接 Google Sheet，資料僅存在 localStorage:', err.message);
-      });
-    }
-
-    async function fetchRecordsFromSheet() {
-      if (!APPS_SCRIPT_URL) return null;
-      try {
-        const response = await fetch(APPS_SCRIPT_URL);
-        const data = await response.json();
-        if (data.ok && Array.isArray(data.records)) {
-          return data.records.map(normalizeRecord);
-        }
-        return null;
-      } catch (err) {
-        console.warn('⚠️ 無法從 Google Sheet 讀取資料:', err.message);
-        return null;
-      }
-    }
-
-    function normalizeRecord(record) {
-      return {
-        id: record.id || record.ID || record.Id || "",
-        createdAt: record.createdAt || record.CreatedAt || record.createdat || new Date().toISOString(),
-        status: record.status || record.Status || "active",
-        userId: record.userId || record.UserID || record.userid || "",
-        mood: record.mood || record.Mood || "sunny",
-        intensity: Number(record.intensity || record.Intensity || 0),
-        diary: record.diary || record.Diary || ""
-      };
-    }
-
-    // ========== 多人管理 ==========
-    function loadUsers() {
-      const raw = localStorage.getItem(USERS_KEY);
-      if (raw) users = JSON.parse(raw);
-      if (!users.length) {
-        users = [
-          { id: 'u1', name: '我', emoji: '🙂' },
-          { id: 'u2', name: '伴侶', emoji: '❤️' }
-        ];
-        saveUsers();
-      }
-      if (!currentUserId || !users.find(u=>u.id===currentUserId)) currentUserId = users[0].id;
-    }
-    function saveUsers() { localStorage.setItem(USERS_KEY, JSON.stringify(users)); }
-    function renderUserBar() {
-      userListEl.innerHTML = users.map(u => `
-        <div class="user-chip ${u.id===currentUserId?'active':''}" data-user="${u.id}">
-          <span class="emoji">${u.emoji}</span> ${u.name}
-        </div>`).join('');
-      document.querySelectorAll('.user-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-          currentUserId = chip.dataset.user;
-          renderUserBar();
-        });
-      });
-    }
-    addUserBtn.addEventListener('click', () => {
-      const name = prompt('輸入新使用者名稱：');
-      if (!name) return;
-      const emoji = prompt('選擇代表表情 (例如 😊)：', '😊') || '😊';
-      users.push({ id: crypto.randomUUID(), name, emoji });
-      saveUsers();
-      currentUserId = users[users.length-1].id;
-      renderUserBar();
-    });
-
-    // ========== localStorage 輔助 ==========
-    function loadFromLocalStorage() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? JSON.parse(raw).filter(r => r && r.id) : [];
-      } catch { return []; }
-    }
-    function persistToLocalStorage() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-    }
-
-    // ========== 其他輔助 ==========
-    function escapeHtml(str) { return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-    function formatTime(iso) {
-      const d = new Date(iso);
-      return isNaN(d) ? iso : `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-    }
-    function refreshView() {
-      let filtered = currentFilter==='all' ? records : records.filter(r=>r.status===currentFilter);
-      renderList(filtered);
-    }
-    function resetForm() {
-      selectedMood = ''; selectedMoodInput.value = '';
-      document.querySelectorAll('.mood-option').forEach(o=>o.classList.remove('selected'));
-      intensityRange.value = 5; intensityDisplay.textContent = '5';
-      diaryInput.value = ''; charCount.textContent = '0/100';
-      editingIdInput.value = ''; editingId = null;
-      validationError.textContent = '';
-      document.querySelector('.submit-btn').textContent = '📡 記錄情緒';
-    }
-    function startEdit(id) {
-      const rec = records.find(r=>r.id===id);
-      if(!rec) return;
-      selectedMood = rec.mood; selectedMoodInput.value = rec.mood;
-      document.querySelectorAll('.mood-option').forEach(o=>{
-        o.classList.toggle('selected', o.dataset.mood === rec.mood);
-      });
-      intensityRange.value = rec.intensity; intensityDisplay.textContent = rec.intensity;
-      diaryInput.value = rec.diary; charCount.textContent = `${rec.diary.length}/100`;
-      editingIdInput.value = rec.id; editingId = rec.id;
-      document.querySelector('.submit-btn').textContent = '✏️ 更新紀錄';
-      validationError.textContent = '';
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
-
-    // ========== 初始化 mood 選項 ==========
-    function buildMoodOptions() {
-      moodGrid.innerHTML = Object.entries(MOODS).map(([key,val])=>`
-        <div class="mood-option" data-mood="${key}">
-          <span class="emoji">${val.emoji}</span><span class="label">${val.label}</span>
-        </div>`).join('');
-      document.querySelectorAll('.mood-option').forEach(opt => {
-        opt.addEventListener('click', () => {
-          selectedMood = opt.dataset.mood;
-          selectedMoodInput.value = selectedMood;
-          document.querySelectorAll('.mood-option').forEach(o=>o.classList.remove('selected'));
-          opt.classList.add('selected');
-        });
-      });
-    }
-
-    // ========== 事件綁定 ==========
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      if (!selectedMood) { validationError.textContent='請選擇天氣'; return; }
-      const intensity = parseInt(intensityRange.value,10);
-      if (isNaN(intensity) || intensity<1||intensity>10) { validationError.textContent='強度錯誤'; return; }
-      const diary = diaryInput.value.trim();
-      if (editingId) {
-        updateRecord(editingId, { mood:selectedMood, intensity, diary });
+  function loadData() {
+    const local = loadFromLocal();
+    records = local;
+    fetchFromSheet().then(sheetRecords => {
+      if (sheetRecords !== null) {
+        records = sheetRecords;
+        cloudAvailable = true;
+        syncStatusEl.textContent = '🟢 雲端已同步';
+        persistLocal();
       } else {
-        const record = createRecord({ mood:selectedMood, intensity, diary });
-        saveData(record);
-      }
-      resetForm();
-      refreshView();
-    });
-
-    intensityRange.addEventListener('input', (e) => intensityDisplay.textContent = e.target.value);
-    diaryInput.addEventListener('input', (e) => charCount.textContent = `${e.target.value.length}/100`);
-    filterBtns.forEach(b => b.addEventListener('click', () => {
-      filterBtns.forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-      currentFilter = b.dataset.filter;
-      refreshView();
-    }));
-    sortBtn.addEventListener('click', () => {
-      sortAsc = !sortAsc;
-      sortBtn.textContent = sortAsc ? '🕒 最舊 ⇄ 最新' : '🕒 最新 ⇄ 最舊';
-      refreshView();
-    });
-
-    // ========== 初始化 ==========
-    function init() {
-      loadUsers();
-      buildMoodOptions();
-      renderUserBar();
-      // 先從 localStorage 載入（立即顯示），再從 Sheet 拉最新資料
-      records = loadFromLocalStorage();
-      refreshView();
-      // 非同步從 Sheet 更新
-      fetchRecordsFromSheet().then(sheetRecords => {
-        if (sheetRecords !== null) {
-          records = sheetRecords;
-          cloudAvailable = true;
-          syncStatusEl.textContent = '🟢 雲端已同步';
-          persistToLocalStorage();
-        } else {
-          cloudAvailable = false;
-          syncStatusEl.textContent = '🟠 無法連接雲端，使用離線資料';
-        }
-        refreshView();
-      }).catch(() => {
         cloudAvailable = false;
-        syncStatusEl.textContent = '🔴 雲端離線，使用本地資料';
-      });
-    }
+        syncStatusEl.textContent = '🟠 無法連接雲端，使用離線資料';
+      }
+      refreshAll();
+    }).catch(() => {
+      cloudAvailable = false;
+      syncStatusEl.textContent = '🔴 雲端離線，使用本地資料';
+      refreshAll();
+    });
+  }
 
-    init();
-    console.log('🌤️ 情緒氣象觀測站 · Google Sheet 同步版已就緒');
-  })();
+  // ========== Google Sheet 同步 ==========
+  function syncToSheet(payload) {
+    if (!APPS_SCRIPT_URL) return;
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(payload)
+    }).then(r => r.json()).then(d => {
+      if (!d.ok) console.warn('Sheet sync error:', d.error);
+    }).catch(e => console.warn('Sheet unreachable:', e.message));
+  }
+
+  async function fetchFromSheet() {
+    if (!APPS_SCRIPT_URL) return null;
+    try {
+      const res = await fetch(APPS_SCRIPT_URL);
+      const data = await res.json();
+      if (data.ok && Array.isArray(data.records)) return data.records.map(normalizeRecord);
+      return null;
+    } catch { return null; }
+  }
+
+  function normalizeRecord(r) {
+    return {
+      id: r.id || r.ID || '',
+      createdAt: r.createdAt || r.CreatedAt || new Date().toISOString(),
+      status: r.status || r.Status || 'active',
+      userId: r.userId || r.UserID || '',
+      mood: r.mood || r.Mood || 'sunny',
+      intensity: Number(r.intensity || r.Intensity || 0),
+      diary: r.diary || r.Diary || '',
+      isPublic: r.isPublic === 'true' || r.isPublic === true || r.isPublic === 'TRUE',
+      region: r.region || r.Region || '',
+      cheers: r.cheers || r.Cheers || '[]'
+    };
+  }
+
+  // ========== localStorage ==========
+  function loadFromLocal() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw).filter(r => r && r.id) : [];
+    } catch { return []; }
+  }
+  function persistLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); }
+
+  // ========== 使用者 ==========
+  function loadUser() {
+    const raw = localStorage.getItem(USER_KEY);
+    if (raw) { currentUser = JSON.parse(raw); return; }
+    currentUser = { id: crypto.randomUUID(), name: '匿名旅人', emoji: '🙂' };
+    saveUser();
+  }
+  function saveUser() { localStorage.setItem(USER_KEY, JSON.stringify(currentUser)); }
+  userBadge.addEventListener('click', () => {
+    const name = prompt('輸入你的匿名暱稱：', currentUser.name) || currentUser.name;
+    const emoji = prompt('選擇代表表情：', currentUser.emoji) || currentUser.emoji;
+    currentUser = { ...currentUser, name, emoji };
+    saveUser();
+    userBadge.textContent = `${currentUser.emoji} ${currentUser.name}`;
+  });
+
+  // ========== 輔助 ==========
+  function escapeHtml(s) { return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  function formatTime(iso) {
+    const d = new Date(iso);
+    return isNaN(d) ? iso : `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  }
+  function buildMoodGrid(container, onSelect) {
+    container.innerHTML = Object.entries(MOODS).map(([k,v]) => `
+      <div class="mood-option" data-mood="${k}"><span class="emoji">${v.emoji}</span><span class="label">${v.label}</span></div>
+    `).join('');
+    container.querySelectorAll('.mood-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        container.querySelectorAll('.mood-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        onSelect(opt.dataset.mood);
+      });
+    });
+  }
+
+  // ========== 渲染 ==========
+  function renderDiaryList(filtered) {
+    const sorted = [...filtered].sort((a,b) => {
+      return diarySortAsc ? new Date(a.createdAt)-new Date(b.createdAt) : new Date(b.createdAt)-new Date(a.createdAt);
+    });
+    if (!sorted.length) { diaryList.innerHTML = '<div class="empty-message">📭 尚無日記</div>'; return; }
+    diaryList.innerHTML = sorted.map(r => {
+      const mood = MOODS[r.mood] || {};
+      const doneClass = r.status === 'done' ? 'is-done' : '';
+      return `<div class="record-card ${doneClass}">
+        <div class="mood-icon">${mood.emoji||'❓'}</div>
+        <div class="record-content">
+          <div class="record-meta"><span>${mood.label} · ${r.intensity}/10</span>${r.isPublic?'<span class="public-badge">🌐 公開</span>':''}</div>
+          <div class="record-diary">${escapeHtml(r.diary)||'⋯'}</div>
+          <div class="record-time">${formatTime(r.createdAt)}</div>
+        </div>
+        <div class="record-actions">
+          <button class="icon-btn toggle-done" data-id="${r.id}">${r.status==='done'?'↩️':'✅'}</button>
+          <button class="icon-btn edit-diary" data-id="${r.id}">✏️</button>
+          <button class="icon-btn delete-diary" data-id="${r.id}">🗑️</button>
+        </div>
+      </div>`;
+    }).join('');
+    bindDiaryButtons();
+  }
+
+  function bindDiaryButtons() {
+    diaryList.querySelectorAll('.toggle-done').forEach(b => b.addEventListener('click', e => {
+      const id = e.currentTarget.dataset.id;
+      const r = records.find(x => x.id === id);
+      if (r) updateRecord(id, { status: r.status === 'active' ? 'done' : 'active' });
+      refreshDiary();
+    }));
+    diaryList.querySelectorAll('.edit-diary').forEach(b => b.addEventListener('click', e => startEditDiary(e.currentTarget.dataset.id)));
+    diaryList.querySelectorAll('.delete-diary').forEach(b => b.addEventListener('click', e => {
+      if (confirm('確定刪除？')) { deleteRecord(e.currentTarget.dataset.id); refreshDiary(); }
+    }));
+  }
+
+  function renderBottleDisplay(record) {
+    if (!record) {
+      bottleDisplay.innerHTML = '<p style="color:var(--text-soft);">點擊下方按鈕，隨機撈取一個來自世界的情緒瓶子</p>';
+      return;
+    }
+    const mood = MOODS[record.mood] || {};
+    const regionName = REGION_LABELS[record.region] || '未知';
+    let cheersArr = [];
+    try { cheersArr = JSON.parse(record.cheers || '[]'); } catch { cheersArr = []; }
+    bottleDisplay.innerHTML = `
+      <div class="bottle-card">
+        <div class="bottle-neck"></div>
+        <span class="bottle-emoji">${mood.emoji}</span>
+        <div class="bottle-mood">${mood.label} · ${record.intensity}/10</div>
+        <div class="bottle-diary">"${escapeHtml(record.diary) || '⋯'}"</div>
+        <div class="bottle-region">📍 ${regionName} · ${formatTime(record.createdAt)}</div>
+        <div class="cheer-buttons" id="cheerButtons">
+          <button class="cheer-btn" data-cheer="🫶">🫶 暖心拍拍</button>
+          <button class="cheer-btn" data-cheer="🌈">🌈 送你彩虹</button>
+          <button class="cheer-btn" data-cheer="🔥">🔥 我懂</button>
+        </div>
+      </div>`;
+    bottleDisplay.querySelectorAll('.cheer-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const cheer = this.dataset.cheer;
+        let arr = [];
+        try { arr = JSON.parse(record.cheers || '[]'); } catch { arr = []; }
+        arr.push(cheer);
+        updateRecord(record.id, { cheers: JSON.stringify(arr) });
+        this.classList.add('sent');
+        setTimeout(() => this.classList.remove('sent'), 600);
+      });
+    });
+  }
+
+  function renderWorldMap() {
+    const continents = ['asia', 'europe', 'north_america', 'south_america', 'africa', 'oceania'];
+    worldMap.innerHTML = continents.map(c => {
+      const regionRecords = records.filter(r => r.region === c && r.isPublic);
+      const moodCounts = {};
+      regionRecords.forEach(r => { moodCounts[r.mood] = (moodCounts[r.mood]||0)+1; });
+      const topEmojis = Object.entries(moodCounts).sort((a,b)=>b[1]-a[1]).slice(0,8)
+        .map(([m]) => MOODS[m]?.emoji || '').join(' ');
+      return `<div class="continent-card" data-region="${c}">
+        <span style="font-size:1.8rem;">${REGION_EMOJIS[c]}</span>
+        <span class="continent-name">${REGION_LABELS[c]}</span>
+        <span class="continent-emojis">${topEmojis || '⋯'}</span>
+        <span class="continent-count">${regionRecords.length} 個瓶子</span>
+      </div>`;
+    }).join('');
+  }
+
+  function refreshDiary() {
+    const filtered = diaryFilter === 'all' ? records.filter(r => !r.isPublic || r.userId === currentUser.id)
+      : records.filter(r => r.status === diaryFilter && (!r.isPublic || r.userId === currentUser.id));
+    renderDiaryList(filtered);
+  }
+  function refreshAll() {
+    refreshDiary();
+    renderWorldMap();
+    userBadge.textContent = `${currentUser.emoji} ${currentUser.name}`;
+  }
+
+  function startEditDiary(id) {
+    const r = records.find(x => x.id === id);
+    if (!r) return;
+    diarySelectedMood = r.mood; diarySelectedMoodInput.value = r.mood;
+    document.querySelectorAll('#diaryMoodGrid .mood-option').forEach(o => o.classList.toggle('selected', o.dataset.mood === r.mood));
+    diaryIntensity.value = r.intensity; diaryIntensityDisplay.textContent = r.intensity;
+    diaryText.value = r.diary; diaryCharCount.textContent = `${r.diary.length}/100`;
+    diaryEditingIdInput.value = r.id; diaryEditingId = r.id;
+    diaryError.textContent = '';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function resetDiaryForm() {
+    diarySelectedMood = ''; diarySelectedMoodInput.value = '';
+    document.querySelectorAll('#diaryMoodGrid .mood-option').forEach(o => o.classList.remove('selected'));
+    diaryIntensity.value = 5; diaryIntensityDisplay.textContent = '5';
+    diaryText.value = ''; diaryCharCount.textContent = '0/100';
+    diaryEditingIdInput.value = ''; diaryEditingId = null;
+    diaryError.textContent = '';
+  }
+  function resetBottleForm() {
+    bottleSelectedMood = ''; bottleSelectedMoodInput.value = '';
+    document.querySelectorAll('#bottleMoodGrid .mood-option').forEach(o => o.classList.remove('selected'));
+    bottleIntensity.value = 5; bottleIntensityDisplay.textContent = '5';
+    bottleDiary.value = ''; bottleCharCount.textContent = '0/100';
+    bottleError.textContent = '';
+  }
+
+  // ========== Tab 切換 ==========
+  tabNav.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabNav.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTab = btn.dataset.tab;
+      tabContents.forEach(tc => tc.classList.remove('active'));
+      document.getElementById(currentTab).classList.add('active');
+      if (currentTab === 'tab-world') renderWorldMap();
+    });
+  });
+
+  // ========== 事件綁定 ==========
+  // Tab 1
+  buildMoodGrid(diaryMoodGrid, (mood) => { diarySelectedMood = mood; diarySelectedMoodInput.value = mood; });
+  diaryIntensity.addEventListener('input', e => { diaryIntensityDisplay.textContent = e.target.value; });
+  diaryText.addEventListener('input', e => { diaryCharCount.textContent = `${e.target.value.length}/100`; });
+  diaryForm.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!diarySelectedMood) { diaryError.textContent = '請選擇天氣'; return; }
+    const intensity = parseInt(diaryIntensity.value);
+    if (isNaN(intensity) || intensity<1||intensity>10) { diaryError.textContent='強度錯誤'; return; }
+    const record = createRecord({ mood: diarySelectedMood, intensity, diary: diaryText.value.trim(), status: 'active', isPublic: false });
+    if (diaryEditingId) {
+      updateRecord(diaryEditingId, { mood: diarySelectedMood, intensity, diary: diaryText.value.trim() });
+    } else {
+      saveData(record);
+    }
+    resetDiaryForm();
+    refreshDiary();
+  });
+  diaryToolbar.querySelectorAll('.filter-btn').forEach(b => b.addEventListener('click', function() {
+    diaryToolbar.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active'));
+    this.classList.add('active');
+    diaryFilter = this.dataset.filter;
+    refreshDiary();
+  }));
+  diarySortBtn.addEventListener('click', () => {
+    diarySortAsc = !diarySortAsc;
+    diarySortBtn.textContent = diarySortAsc ? '🕒 最舊 ⇄ 最新' : '🕒 最新 ⇄ 最舊';
+    refreshDiary();
+  });
+
+  // Tab 2
+  buildMoodGrid(bottleMoodGrid, (mood) => { bottleSelectedMood = mood; bottleSelectedMoodInput.value = mood; });
+  bottleIntensity.addEventListener('input', e => { bottleIntensityDisplay.textContent = e.target.value; });
+  bottleDiary.addEventListener('input', e => { bottleCharCount.textContent = `${e.target.value.length}/100`; });
+  bottleForm.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!bottleSelectedMood) { bottleError.textContent = '請選擇天氣'; return; }
+    const intensity = parseInt(bottleIntensity.value);
+    if (isNaN(intensity) || intensity<1||intensity>10) { bottleError.textContent='強度錯誤'; return; }
+    const record = createRecord({
+      mood: bottleSelectedMood, intensity, diary: bottleDiary.value.trim(),
+      status: 'active', isPublic: true, region: bottleRegion.value
+    });
+    saveData(record);
+    resetBottleForm();
+    bottleDisplay.innerHTML = '<p style="color:#69db7c;">✅ 你的瓶子已投向大海！</p>';
+    refreshAll();
+  });
+  fetchBottleBtn.addEventListener('click', () => {
+    const publicRecords = records.filter(r => r.isPublic && r.userId !== currentUser.id);
+    if (!publicRecords.length) {
+      bottleDisplay.innerHTML = '<p style="color:var(--text-soft);">🌊 大海中還沒有其他瓶子，快投遞一個吧！</p>';
+      return;
+    }
+    const random = publicRecords[Math.floor(Math.random() * publicRecords.length)];
+    renderBottleDisplay(random);
+  });
+
+  // ========== 初始化 ==========
+  function init() {
+    loadUser();
+    buildMoodGrid(diaryMoodGrid, (mood) => { diarySelectedMood = mood; diarySelectedMoodInput.value = mood; });
+    buildMoodGrid(bottleMoodGrid, (mood) => { bottleSelectedMood = mood; bottleSelectedMoodInput.value = mood; });
+    const local = loadFromLocal();
+    records = local;
+    refreshAll();
+    fetchFromSheet().then(sheetRecords => {
+      if (sheetRecords !== null) {
+        records = sheetRecords;
+        cloudAvailable = true;
+        syncStatusEl.textContent = '🟢 雲端已同步';
+        persistLocal();
+      } else {
+        cloudAvailable = false;
+        syncStatusEl.textContent = '🟠 無法連接雲端，使用離線資料';
+      }
+      refreshAll();
+    }).catch(() => {
+      cloudAvailable = false;
+      syncStatusEl.textContent = '🔴 雲端離線，使用本地資料';
+    });
+  }
+  init();
+})();
 </script>
 </body>
 </html>
