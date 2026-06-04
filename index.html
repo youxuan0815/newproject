@@ -97,11 +97,13 @@
     textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 14px rgba(255,127,80,0.1); }
     .char-count { text-align: right; font-size: 0.65rem; color: var(--text-soft); }
     .btn {
-      width: 100%; padding: 13px; border: none; border-radius: 32px; font-weight: 700; font-size: 0.95rem;
+      padding: 13px; border: none; border-radius: 32px; font-weight: 700; font-size: 0.95rem;
       cursor: pointer; transition: var(--transition); letter-spacing: 0.03em; margin-top: 10px;
     }
-    .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 18px rgba(255,127,80,0.3); }
+    .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 18px rgba(255,127,80,0.3); width: 100%; }
     .btn-primary:hover { background: #ff8f60; transform: translateY(-1px); }
+    .btn-small { padding: 8px 18px; font-size: 0.8rem; width: auto; display: inline-block; }
+    .btn-secondary { background: transparent; border: 2px solid var(--border); color: var(--text); }
     .validation-error { color: #ff6b6b; font-size: 0.75rem; margin-top: 6px; }
     select {
       width: 100%; padding: 10px; border-radius: 12px; background: var(--card); color: var(--text);
@@ -109,13 +111,13 @@
     }
     .toolbar {
       display: flex; gap: 6px; background: var(--surface); padding: 5px; border-radius: 32px;
-      border: 1px solid var(--border);
+      border: 1px solid var(--border); flex-wrap: wrap;
     }
-    .filter-btn, .sort-btn {
+    .filter-btn, .sort-btn, .mode-btn {
       padding: 8px 16px; border: none; background: transparent; color: var(--text-soft);
       border-radius: 24px; font-weight: 500; cursor: pointer; transition: var(--transition); font-size: 0.8rem;
     }
-    .filter-btn.active { background: var(--accent); color: #fff; }
+    .filter-btn.active, .mode-btn.active { background: var(--accent); color: #fff; }
     .sort-btn { margin-left: auto; background: #2a4060; }
     .records-list { display: flex; flex-direction: column; gap: 12px; }
     .record-card {
@@ -136,6 +138,25 @@
     }
     .icon-btn:hover { background: rgba(255,127,80,0.12); border-color: var(--accent); color: #fff; }
     .empty-message { text-align: center; padding: 40px; color: var(--text-soft); }
+
+    /* 月曆 */
+    .calendar { width: 100%; }
+    .calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .calendar-header button { background: var(--card); border: 1px solid var(--border); color: #fff; padding: 6px 14px; border-radius: 20px; cursor: pointer; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+    .calendar-day-name { font-size: 0.7rem; color: var(--text-soft); padding: 6px 0; }
+    .calendar-day {
+      aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      border-radius: 12px; cursor: pointer; transition: var(--transition); font-size: 0.85rem;
+      background: var(--card); border: 1px solid transparent; position: relative;
+    }
+    .calendar-day:hover { border-color: var(--accent); }
+    .calendar-day.today { border-color: var(--accent); box-shadow: 0 0 12px rgba(255,127,80,0.2); }
+    .calendar-day .day-num { font-size: 0.7rem; color: var(--text-soft); position: absolute; top: 4px; left: 6px; }
+    .calendar-day .day-emoji { font-size: 1.4rem; }
+    .calendar-day.empty { background: transparent; cursor: default; }
+
+    /* 瓶子卡片 */
     .bottle-card {
       background: linear-gradient(135deg, #1a3a4a, #0d2838); border-radius: 60px 60px 30px 30px;
       padding: 28px 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); border: 2px solid #3a6070;
@@ -156,6 +177,19 @@
     .cheer-btn:hover { border-color: var(--accent); box-shadow: var(--shadow-glow); transform: scale(1.05); }
     .cheer-btn.sent { background: var(--accent); border-color: var(--accent); animation: pulse 0.6s ease; }
     @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+
+    /* 聊天室 */
+    .chat-container { max-width: 400px; margin: 0 auto; width: 100%; }
+    .chat-messages { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; margin-bottom: 12px; }
+    .chat-msg { padding: 10px 14px; border-radius: 16px; max-width: 80%; font-size: 0.85rem; }
+    .chat-msg.from-other { background: var(--card); align-self: flex-start; }
+    .chat-msg.from-me { background: var(--accent); align-self: flex-end; color: #fff; }
+    .chat-msg .msg-time { font-size: 0.6rem; color: var(--text-soft); margin-top: 2px; }
+    .chat-input-row { display: flex; gap: 8px; }
+    .chat-input-row input { flex: 1; padding: 10px; border-radius: 20px; background: var(--card); border: 1px solid var(--border); color: #fff; }
+    .chat-input-row button { padding: 10px 16px; border-radius: 20px; }
+
+    /* 世界地圖 */
     .world-map { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .continent-card {
       background: var(--card); border-radius: var(--radius-lg); padding: 16px;
@@ -178,6 +212,7 @@
     .bar-fill.thunder { background: #7b5ea7; }
     .bar-fill.rainbow { background: linear-gradient(90deg, #ff6b6b, #ffa94d, #ffd43b, #69db7c, #74c0fc); }
     .bar-pct { width: 32px; text-align: right; color: var(--text-soft); }
+
     .modal-overlay {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; padding: 20px;
@@ -201,12 +236,19 @@
     .modal-bottle .bottle-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
     .modal-bottle .bottle-diary { font-size: 0.85rem; color: #c8d8e8; margin-bottom: 2px; }
     .modal-bottle .bottle-time { font-size: 0.65rem; color: #6a8090; }
+    .conversation-notice {
+      background: rgba(255,127,80,0.15); border: 1px solid var(--accent); border-radius: 12px;
+      padding: 10px 14px; margin: 8px 0; text-align: center; cursor: pointer;
+    }
+    .conversation-notice:hover { background: rgba(255,127,80,0.25); }
+
     .world-loading { text-align: center; padding: 20px; color: var(--text-soft); }
     .world-error { text-align: center; padding: 20px; color: #ff6b6b; }
     @media (max-width: 500px) {
       .tab-btn { font-size: 0.75rem; padding: 10px 6px; }
       .record-card { flex-wrap: wrap; }
       .world-map { grid-template-columns: 1fr; }
+      .calendar-grid { gap: 2px; }
     }
   </style>
 </head>
@@ -216,9 +258,7 @@
     <span class="header-icon">🌤️</span>
     <h1>情緒氣象觀測站</h1>
     <p class="subtitle">把你的心情投向世界，撈起陌生人的溫暖</p>
-    <div class="user-row">
-      <span class="user-badge" id="userBadge">🙂 匿名旅人</span>
-    </div>
+    <div class="user-row"><span class="user-badge" id="userBadge">🙂 匿名旅人</span></div>
     <p class="sync-status" id="syncStatus">🟡 正在連接雲端...</p>
   </header>
 
@@ -228,34 +268,21 @@
     <button class="tab-btn" data-tab="tab-world">🌍 世界情緒</button>
   </nav>
 
+  <!-- Tab 1: 個人日記 -->
   <div class="tab-content active" id="tab-diary">
-    <div class="section-card">
-      <form id="diaryForm" autocomplete="off">
-        <span class="section-label">🌡️ 情緒天氣</span>
-        <div class="mood-grid" id="diaryMoodGrid"></div>
-        <input type="hidden" id="diarySelectedMood" value="">
-        <span class="section-label">💪 強度</span>
-        <div class="intensity-row">
-          <input type="range" id="diaryIntensity" min="1" max="10" value="5" step="1">
-          <span class="intensity-badge" id="diaryIntensityDisplay">5</span>
-        </div>
-        <span class="section-label">📝 一句話日記</span>
-        <textarea id="diaryText" maxlength="100" placeholder="寫下此刻的感受..."></textarea>
-        <div class="char-count" id="diaryCharCount">0 / 100</div>
-        <div class="validation-error" id="diaryError"></div>
-        <button type="submit" class="btn btn-primary">📡 記錄情緒</button>
-        <input type="hidden" id="diaryEditingId" value="">
-      </form>
-    </div>
     <div class="toolbar" id="diaryToolbar">
+      <button class="mode-btn active" data-mode="calendar">📅 月曆</button>
+      <button class="mode-btn" data-mode="list">📋 列表</button>
       <button class="filter-btn active" data-filter="all">全部</button>
       <button class="filter-btn" data-filter="active">活躍中</button>
       <button class="filter-btn" data-filter="done">已回顧</button>
       <button class="sort-btn" id="diarySortBtn">🕒 最新 ⇄ 最舊</button>
     </div>
-    <div id="diaryList" class="records-list"></div>
+    <div id="diaryCalendarView"></div>
+    <div id="diaryListView" class="records-list" style="display:none;"></div>
   </div>
 
+  <!-- Tab 2: 漂流瓶 -->
   <div class="tab-content" id="tab-bottle">
     <div class="section-card" style="text-align:center;">
       <span class="section-title">🫧 把你的心情裝進瓶子，投向大海</span>
@@ -273,12 +300,8 @@
         <div class="char-count" id="bottleCharCount">0 / 100</div>
         <span class="section-label">🌍 你的地區</span>
         <select id="bottleRegion">
-          <option value="asia">亞洲</option>
-          <option value="europe">歐洲</option>
-          <option value="north_america">北美洲</option>
-          <option value="south_america">南美洲</option>
-          <option value="africa">非洲</option>
-          <option value="oceania">大洋洲</option>
+          <option value="asia">亞洲</option><option value="europe">歐洲</option><option value="north_america">北美洲</option>
+          <option value="south_america">南美洲</option><option value="africa">非洲</option><option value="oceania">大洋洲</option>
         </select>
         <div class="validation-error" id="bottleError"></div>
         <button type="submit" class="btn btn-primary">🫧 投向大海</button>
@@ -286,14 +309,13 @@
     </div>
     <div class="section-card" style="text-align:center;">
       <span class="section-title">🐚 撈取一個陌生人的瓶子</span>
-      <div id="bottleDisplay">
-        <p style="color:var(--text-soft);">點擊下方按鈕，隨機撈取一個來自世界的情緒瓶子</p>
-      </div>
+      <div id="bottleDisplay"><p style="color:var(--text-soft);">點擊下方按鈕，隨機撈取一個來自世界的情緒瓶子</p></div>
       <button class="btn btn-primary" id="fetchBottleBtn">🎣 撈取瓶子</button>
       <p style="text-align:center;color:var(--text-soft);font-size:0.7rem;margin-top:8px;" id="seaStatus"></p>
     </div>
   </div>
 
+  <!-- Tab 3: 世界情緒地圖 -->
   <div class="tab-content" id="tab-world">
     <div class="section-card">
       <span class="section-title">🌍 世界情緒氣象</span>
@@ -305,8 +327,9 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="continentModal">
-  <div class="modal-content" id="continentModalContent"></div>
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-content" id="modalContent"></div>
 </div>
 
 <script>
@@ -315,48 +338,28 @@
   const STORAGE_KEY = 'records';
   const USER_KEY = 'moodUser';
   const MOODS = {
-    sunny: { label: '晴', emoji: '☀️' },
-    cloudy: { label: '陰', emoji: '☁️' },
-    rainy: { label: '雨', emoji: '🌧️' },
-    thunder: { label: '雷', emoji: '⛈️' },
-    rainbow: { label: '彩虹', emoji: '🌈' }
+    sunny: { label: '晴', emoji: '☀️' }, cloudy: { label: '陰', emoji: '☁️' }, rainy: { label: '雨', emoji: '🌧️' },
+    thunder: { label: '雷', emoji: '⛈️' }, rainbow: { label: '彩虹', emoji: '🌈' }
   };
   const VALID_MOODS = Object.keys(MOODS);
-  const REGION_LABELS = {
-    asia: '亞洲', europe: '歐洲', north_america: '北美洲',
-    south_america: '南美洲', africa: '非洲', oceania: '大洋洲'
-  };
-  const REGION_EMOJIS = {
-    asia: '🌏', europe: '🌍', north_america: '🌎',
-    south_america: '🌎', africa: '🌍', oceania: '🏝️'
-  };
+  const REGION_LABELS = { asia: '亞洲', europe: '歐洲', north_america: '北美洲', south_america: '南美洲', africa: '非洲', oceania: '大洋洲' };
+  const REGION_EMOJIS = { asia: '🌏', europe: '🌍', north_america: '🌎', south_america: '🌎', africa: '🌍', oceania: '🏝️' };
   const CONTINENTS = ['asia', 'europe', 'north_america', 'south_america', 'africa', 'oceania'];
+  const CHAT_LIMIT = 5;
 
-  let records = [];
-  let currentUser = null;
-  let currentTab = 'tab-diary';
-  let diaryFilter = 'all';
-  let diarySortAsc = false;
-  let diarySelectedMood = '';
-  let diaryEditingId = null;
-  let bottleSelectedMood = '';
-  let cloudAvailable = false;
-  let worldData = [];
+  let records = [], currentUser = null, currentTab = 'tab-diary';
+  let diaryMode = 'calendar', diaryFilter = 'all', diarySortAsc = false;
+  let diarySelectedMood = '', diaryEditingId = null, diaryEditingDate = '';
+  let bottleSelectedMood = '', cloudAvailable = false, worldData = [];
+  let calendarYear, calendarMonth;
 
+  // DOM
   const syncStatusEl = document.getElementById('syncStatus');
   const userBadge = document.getElementById('userBadge');
   const tabNav = document.getElementById('tabNav');
   const tabContents = document.querySelectorAll('.tab-content');
-  const diaryForm = document.getElementById('diaryForm');
-  const diaryMoodGrid = document.getElementById('diaryMoodGrid');
-  const diarySelectedMoodInput = document.getElementById('diarySelectedMood');
-  const diaryIntensity = document.getElementById('diaryIntensity');
-  const diaryIntensityDisplay = document.getElementById('diaryIntensityDisplay');
-  const diaryText = document.getElementById('diaryText');
-  const diaryCharCount = document.getElementById('diaryCharCount');
-  const diaryError = document.getElementById('diaryError');
-  const diaryEditingIdInput = document.getElementById('diaryEditingId');
-  const diaryList = document.getElementById('diaryList');
+  const diaryCalendarView = document.getElementById('diaryCalendarView');
+  const diaryListView = document.getElementById('diaryListView');
   const diaryToolbar = document.getElementById('diaryToolbar');
   const diarySortBtn = document.getElementById('diarySortBtn');
   const bottleForm = document.getElementById('bottleForm');
@@ -374,399 +377,216 @@
   const worldMap = document.getElementById('worldMap');
   const worldLoading = document.getElementById('worldLoading');
   const worldError = document.getElementById('worldError');
-  const continentModal = document.getElementById('continentModal');
-  const continentModalContent = document.getElementById('continentModalContent');
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalContent = document.getElementById('modalContent');
 
   function createRecord(data) {
     if (!data.mood || !VALID_MOODS.includes(data.mood)) throw new Error('請選擇情緒天氣');
     if (typeof data.intensity !== 'number' || data.intensity < 1 || data.intensity > 10) throw new Error('強度1-10');
     return {
       id: crypto.randomUUID ? crypto.randomUUID() : Date.now()+'-'+Math.random().toString(36),
-      createdAt: new Date().toISOString(),
-      status: data.status || 'active',
-      userId: currentUser.id,
-      mood: data.mood,
-      intensity: data.intensity,
-      diary: (data.diary || '').trim().slice(0,100),
+      createdAt: data.createdAt || new Date().toISOString(),
+      status: data.status || 'active', userId: currentUser.id, mood: data.mood,
+      intensity: data.intensity, diary: (data.diary || '').trim().slice(0,100),
       isPublic: data.isPublic !== undefined ? data.isPublic : false,
-      region: data.region || '',
-      cheers: data.cheers || '[]'
+      region: data.region || '', cheers: data.cheers || '[]',
+      conversation: data.conversation || '[]', conversationActive: data.conversationActive !== undefined ? data.conversationActive : true
     };
   }
-
-  function saveData(record) {
-    records.push(record);
-    persistLocal();
-    syncToSheet({ action: "create", record });
-    updateSeaStatus();
-    if (currentTab === 'tab-world') loadWorldData();
-  }
-
+  function saveData(record) { records.push(record); persistLocal(); syncToSheet({ action: "create", record }); updateSeaStatus(); if (currentTab === 'tab-world') loadWorldData(); }
   function updateRecord(id, changes) {
-    const idx = records.findIndex(r => r.id === id);
-    if (idx === -1) return false;
-    records[idx] = { ...records[idx], ...changes };
-    persistLocal();
-    syncToSheet({ action: "update", id, changes });
-    if (currentTab === 'tab-world') loadWorldData();
-    return true;
+    const idx = records.findIndex(r => r.id === id); if (idx === -1) return false;
+    records[idx] = { ...records[idx], ...changes }; persistLocal();
+    syncToSheet({ action: "update", id, changes }); if (currentTab === 'tab-world') loadWorldData(); return true;
   }
-
-  function deleteRecord(id) {
-    records = records.filter(r => r.id !== id);
-    persistLocal();
-    syncToSheet({ action: "delete", id });
-    updateSeaStatus();
-    if (currentTab === 'tab-world') loadWorldData();
-  }
-
+  function deleteRecord(id) { records = records.filter(r => r.id !== id); persistLocal(); syncToSheet({ action: "delete", id }); updateSeaStatus(); if (currentTab === 'tab-world') loadWorldData(); }
   function loadData() {
-    const local = loadFromLocal();
-    records = local;
-    updateSeaStatus();
-    fetchFromSheet().then(sheetRecords => {
-      if (sheetRecords !== null) {
-        records = sheetRecords;
-        cloudAvailable = true;
-        syncStatusEl.textContent = '🟢 雲端已同步';
-        persistLocal();
-      } else {
-        cloudAvailable = false;
-        syncStatusEl.textContent = '🟠 無法連接雲端，使用離線資料';
-      }
+    const local = loadFromLocal(); records = local; updateSeaStatus();
+    fetchFromSheet().then(sr => {
+      if (sr !== null) { records = sr; cloudAvailable = true; syncStatusEl.textContent = '🟢 雲端已同步'; persistLocal(); }
+      else { cloudAvailable = false; syncStatusEl.textContent = '🟠 無法連接雲端，使用離線資料'; }
       refreshAll();
-    }).catch(() => {
-      cloudAvailable = false;
-      syncStatusEl.textContent = '🔴 雲端離線，使用本地資料';
-      refreshAll();
-    });
+    }).catch(() => { cloudAvailable = false; syncStatusEl.textContent = '🔴 雲端離線，使用本地資料'; refreshAll(); });
   }
-
   function syncToSheet(payload) {
     if (!APPS_SCRIPT_URL) return;
-    fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify(payload)
-    }).then(r => r.json()).then(d => { if (!d.ok) console.warn('Sheet error:', d.error); })
-      .catch(e => console.warn('Sheet unreachable:', e.message));
+    fetch(APPS_SCRIPT_URL, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(payload) })
+      .then(r => r.json()).then(d => { if (!d.ok) console.warn('Sheet error:', d.error); }).catch(e => console.warn('Sheet unreachable:', e.message));
   }
-
   async function fetchFromSheet() {
     if (!APPS_SCRIPT_URL) return null;
-    try {
-      const res = await fetch(APPS_SCRIPT_URL);
-      const data = await res.json();
-      if (data.ok && Array.isArray(data.records)) {
-        return data.records.map(normalizeRecord);
-      }
-      return null;
-    } catch(e) { return null; }
+    try { const res = await fetch(APPS_SCRIPT_URL); const data = await res.json(); if (data.ok && Array.isArray(data.records)) return data.records.map(normalizeRecord); return null; }
+    catch { return null; }
   }
-
   function normalizeRecord(r) {
-    let isPublicVal = r.isPublic;
-    if (isPublicVal === undefined) isPublicVal = r.IsPublic;
-    if (isPublicVal === undefined) isPublicVal = r.ISPUBLIC;
-    let isPublicBool = false;
-    if (typeof isPublicVal === 'boolean') { isPublicBool = isPublicVal; }
-    else if (typeof isPublicVal === 'string') { isPublicBool = isPublicVal.toUpperCase() === 'TRUE'; }
-    else if (typeof isPublicVal === 'number') { isPublicBool = isPublicVal === 1; }
-    return {
-      id: r.id || r.ID || r.Id || '',
-      createdAt: r.createdAt || r.CreatedAt || r.createdat || new Date().toISOString(),
-      status: r.status || r.Status || 'active',
-      userId: r.userId || r.UserID || r.UserId || r.userid || '',
-      mood: r.mood || r.Mood || 'sunny',
-      intensity: Number(r.intensity || r.Intensity || 0),
-      diary: r.diary || r.Diary || '',
-      isPublic: isPublicBool,
-      region: r.region || r.Region || '',
-      cheers: r.cheers || r.Cheers || '[]'
-    };
+    let ip = r.isPublic; if (ip === undefined) ip = r.IsPublic; if (ip === undefined) ip = r.ISPUBLIC;
+    let ipb = false; if (typeof ip === 'boolean') ipb = ip; else if (typeof ip === 'string') ipb = ip.toUpperCase() === 'TRUE'; else if (typeof ip === 'number') ipb = ip === 1;
+    let ca = r.conversationActive; if (ca === undefined) ca = r.ConversationActive;
+    let cab = true; if (typeof ca === 'boolean') cab = ca; else if (typeof ca === 'string') cab = ca.toUpperCase() === 'TRUE';
+    return { id: r.id||r.ID||r.Id||'', createdAt: r.createdAt||r.CreatedAt||r.createdat||new Date().toISOString(), status: r.status||r.Status||'active', userId: r.userId||r.UserID||r.UserId||r.userid||'', mood: r.mood||r.Mood||'sunny', intensity: Number(r.intensity||r.Intensity||0), diary: r.diary||r.Diary||'', isPublic: ipb, region: r.region||r.Region||'', cheers: r.cheers||r.Cheers||'[]', conversation: r.conversation||r.Conversation||'[]', conversationActive: cab };
   }
-
-  function loadFromLocal() {
-    try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw).filter(r => r && r.id) : []; }
-    catch { return []; }
-  }
+  function loadFromLocal() { try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw).filter(r => r && r.id) : []; } catch { return []; } }
   function persistLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); }
-
-  function loadUser() {
-    const raw = localStorage.getItem(USER_KEY);
-    if (raw) { currentUser = JSON.parse(raw); return; }
-    currentUser = { id: crypto.randomUUID(), name: '匿名旅人', emoji: '🙂' };
-    saveUser();
-  }
+  function loadUser() { const raw = localStorage.getItem(USER_KEY); if (raw) { currentUser = JSON.parse(raw); return; } currentUser = { id: crypto.randomUUID(), name: '匿名旅人', emoji: '🙂' }; saveUser(); }
   function saveUser() { localStorage.setItem(USER_KEY, JSON.stringify(currentUser)); }
-  userBadge.addEventListener('click', () => {
-    const name = prompt('輸入你的匿名暱稱：', currentUser.name) || currentUser.name;
-    const emoji = prompt('選擇代表表情：', currentUser.emoji) || currentUser.emoji;
-    currentUser = { ...currentUser, name, emoji };
-    saveUser();
-    userBadge.textContent = `${currentUser.emoji} ${currentUser.name}`;
-  });
-
+  userBadge.addEventListener('click', () => { const name = prompt('輸入你的匿名暱稱：', currentUser.name) || currentUser.name; const emoji = prompt('選擇代表表情：', currentUser.emoji) || currentUser.emoji; currentUser = { ...currentUser, name, emoji }; saveUser(); userBadge.textContent = `${currentUser.emoji} ${currentUser.name}`; });
   function escapeHtml(s) { return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-  function formatTime(iso) {
-    const d = new Date(iso);
-    return isNaN(d) ? iso : `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-  }
+  function formatTime(iso) { const d = new Date(iso); return isNaN(d) ? iso : `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
+  function formatDate(iso) { const d = new Date(iso); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
   function buildMoodGrid(container, onSelect) {
-    container.innerHTML = Object.entries(MOODS).map(([k,v]) => `
-      <div class="mood-option" data-mood="${k}"><span class="emoji">${v.emoji}</span><span class="label">${v.label}</span></div>
-    `).join('');
-    container.querySelectorAll('.mood-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        container.querySelectorAll('.mood-option').forEach(o => o.classList.remove('selected'));
-        opt.classList.add('selected');
-        onSelect(opt.dataset.mood);
-      });
-    });
+    container.innerHTML = Object.entries(MOODS).map(([k,v]) => `<div class="mood-option" data-mood="${k}"><span class="emoji">${v.emoji}</span><span class="label">${v.label}</span></div>`).join('');
+    container.querySelectorAll('.mood-option').forEach(opt => { opt.addEventListener('click', () => { container.querySelectorAll('.mood-option').forEach(o => o.classList.remove('selected')); opt.classList.add('selected'); onSelect(opt.dataset.mood); }); });
   }
-  function updateSeaStatus() {
-    const totalBottles = records.filter(r => r.isPublic).length;
-    const othersBottles = records.filter(r => r.isPublic && r.userId !== currentUser.id).length;
-    seaStatus.textContent = `🌊 大海中目前有 ${totalBottles} 個瓶子（其中 ${othersBottles} 個來自其他人）`;
+  function updateSeaStatus() { const total = records.filter(r => r.isPublic).length; const others = records.filter(r => r.isPublic && r.userId !== currentUser.id).length; seaStatus.textContent = `🌊 大海中目前有 ${total} 個瓶子（其中 ${others} 個來自其他人）`; }
+
+  // ========== 月曆 ==========
+  function getMyDiaries() { return records.filter(r => r.userId === currentUser.id && !r.isPublic); }
+  function getDiaryByDate(dateStr) { return getMyDiaries().find(r => formatDate(r.createdAt) === dateStr); }
+  function renderCalendar() {
+    const now = new Date(); if (!calendarYear) { calendarYear = now.getFullYear(); calendarMonth = now.getMonth() + 1; }
+    const firstDay = new Date(calendarYear, calendarMonth - 1, 1).getDay();
+    const daysInMonth = new Date(calendarYear, calendarMonth, 0).getDate();
+    const todayStr = formatDate(now.toISOString());
+    let html = `<div class="calendar"><div class="calendar-header"><button id="calPrev">◀</button><span style="font-weight:700;">${calendarYear} 年 ${calendarMonth} 月</span><button id="calNext">▶</button></div><div class="calendar-grid">`;
+    ['日','一','二','三','四','五','六'].forEach(d => html += `<div class="calendar-day-name">${d}</div>`);
+    for (let i = 0; i < firstDay; i++) html += '<div class="calendar-day empty"></div>';
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${calendarYear}-${String(calendarMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const diary = getDiaryByDate(dateStr);
+      const emoji = diary ? MOODS[diary.mood]?.emoji || '❓' : '';
+      const todayClass = dateStr === todayStr ? ' today' : '';
+      html += `<div class="calendar-day${todayClass}" data-date="${dateStr}"><span class="day-num">${d}</span><span class="day-emoji">${emoji}</span></div>`;
+    }
+    html += '</div></div>';
+    diaryCalendarView.innerHTML = html;
+    document.getElementById('calPrev').addEventListener('click', () => { if (calendarMonth === 1) { calendarYear--; calendarMonth = 12; } else calendarMonth--; renderCalendar(); });
+    document.getElementById('calNext').addEventListener('click', () => { if (calendarMonth === 12) { calendarYear++; calendarMonth = 1; } else calendarMonth++; renderCalendar(); });
+    diaryCalendarView.querySelectorAll('.calendar-day:not(.empty)').forEach(day => { day.addEventListener('click', () => openDayModal(day.dataset.date)); });
+  }
+  function openDayModal(dateStr) {
+    const diary = getDiaryByDate(dateStr);
+    if (diary) {
+      const mood = MOODS[diary.mood] || {};
+      modalContent.innerHTML = `<div class="modal-header"><span>📅 ${dateStr}</span><button class="modal-close" id="modalClose">✕</button></div>
+        <div style="text-align:center;font-size:3rem;">${mood.emoji}</div>
+        <p style="text-align:center;font-weight:700;">${mood.label} · ${diary.intensity}/10</p>
+        <p style="text-align:center;color:var(--text-soft);">${escapeHtml(diary.diary)||'⋯'}</p>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;">
+          <button class="btn btn-primary btn-small edit-day-btn">✏️ 編輯</button>
+          <button class="btn btn-secondary btn-small delete-day-btn">🗑️ 刪除</button>
+        </div>`;
+      modalOverlay.classList.add('active');
+      document.getElementById('modalClose').addEventListener('click', () => modalOverlay.classList.remove('active'));
+      modalContent.querySelector('.edit-day-btn').addEventListener('click', () => { modalOverlay.classList.remove('active'); openEditForm(dateStr); });
+      modalContent.querySelector('.delete-day-btn').addEventListener('click', () => { if (confirm('刪除這天的心情？')) { deleteRecord(diary.id); refreshAll(); modalOverlay.classList.remove('active'); } });
+    } else {
+      openEditForm(dateStr);
+    }
+  }
+  function openEditForm(dateStr) {
+    diaryEditingDate = dateStr;
+    modalContent.innerHTML = `<div class="modal-header"><span>📅 ${dateStr} 記錄心情</span><button class="modal-close" id="modalClose">✕</button></div>
+      <span class="section-label">🌡️ 情緒天氣</span><div class="mood-grid" id="modalMoodGrid"></div><input type="hidden" id="modalSelectedMood" value="">
+      <span class="section-label">💪 強度</span><div class="intensity-row"><input type="range" id="modalIntensity" min="1" max="10" value="5" step="1"><span class="intensity-badge" id="modalIntensityDisplay">5</span></div>
+      <span class="section-label">📝 一句話日記</span><textarea id="modalDiary" maxlength="100" placeholder="寫下此刻的感受..."></textarea>
+      <div class="validation-error" id="modalError"></div>
+      <button class="btn btn-primary" id="modalSubmit">📡 記錄</button>`;
+    modalOverlay.classList.add('active');
+    let modalMood = ''; buildMoodGrid(document.getElementById('modalMoodGrid'), m => { modalMood = m; document.getElementById('modalSelectedMood').value = m; });
+    document.getElementById('modalIntensity').addEventListener('input', e => document.getElementById('modalIntensityDisplay').textContent = e.target.value);
+    document.getElementById('modalClose').addEventListener('click', () => modalOverlay.classList.remove('active'));
+    document.getElementById('modalSubmit').addEventListener('click', () => {
+      if (!modalMood) { document.getElementById('modalError').textContent = '請選擇天氣'; return; }
+      const intensity = parseInt(document.getElementById('modalIntensity').value);
+      if (isNaN(intensity)||intensity<1||intensity>10) { document.getElementById('modalError').textContent='強度錯誤'; return; }
+      const diaryText = document.getElementById('modalDiary').value.trim();
+      const createdAt = new Date(dateStr + 'T12:00:00').toISOString();
+      saveData(createRecord({ mood: modalMood, intensity, diary: diaryText, status: 'active', isPublic: false, createdAt }));
+      modalOverlay.classList.remove('active'); refreshAll();
+    });
   }
 
   function renderDiaryList(filtered) {
     const sorted = [...filtered].sort((a,b) => diarySortAsc ? new Date(a.createdAt)-new Date(b.createdAt) : new Date(b.createdAt)-new Date(a.createdAt));
-    if (!sorted.length) { diaryList.innerHTML = '<div class="empty-message">📭 尚無私人日記</div>'; return; }
-    diaryList.innerHTML = sorted.map(r => {
+    if (!sorted.length) { diaryListView.innerHTML = '<div class="empty-message">📭 尚無私人日記</div>'; return; }
+    diaryListView.innerHTML = sorted.map(r => {
       const mood = MOODS[r.mood] || {};
-      return `<div class="record-card ${r.status==='done'?'is-done':''}">
-        <div class="mood-icon">${mood.emoji||'❓'}</div>
-        <div class="record-content">
-          <div class="record-meta"><span>${mood.label} · ${r.intensity}/10</span></div>
-          <div class="record-diary">${escapeHtml(r.diary)||'⋯'}</div>
-          <div class="record-time">${formatTime(r.createdAt)}</div>
-        </div>
-        <div class="record-actions">
-          <button class="icon-btn toggle-done" data-id="${r.id}">${r.status==='done'?'↩️':'✅'}</button>
-          <button class="icon-btn edit-diary" data-id="${r.id}">✏️</button>
-          <button class="icon-btn delete-diary" data-id="${r.id}">🗑️</button>
-        </div>
-      </div>`;
+      return `<div class="record-card ${r.status==='done'?'is-done':''}"><div class="mood-icon">${mood.emoji||'❓'}</div><div class="record-content"><div class="record-meta"><span>${mood.label} · ${r.intensity}/10</span></div><div class="record-diary">${escapeHtml(r.diary)||'⋯'}</div><div class="record-time">${formatTime(r.createdAt)}</div></div><div class="record-actions"><button class="icon-btn toggle-done" data-id="${r.id}">${r.status==='done'?'↩️':'✅'}</button><button class="icon-btn edit-list-diary" data-id="${r.id}">✏️</button><button class="icon-btn delete-diary" data-id="${r.id}">🗑️</button></div></div>`;
     }).join('');
     bindDiaryButtons();
   }
-
   function bindDiaryButtons() {
-    diaryList.querySelectorAll('.toggle-done').forEach(b => b.addEventListener('click', e => {
-      const id = e.currentTarget.dataset.id;
-      const r = records.find(x => x.id === id);
-      if (r) updateRecord(id, { status: r.status === 'active' ? 'done' : 'active' });
-      refreshDiary();
-    }));
-    diaryList.querySelectorAll('.edit-diary').forEach(b => b.addEventListener('click', e => startEditDiary(e.currentTarget.dataset.id)));
-    diaryList.querySelectorAll('.delete-diary').forEach(b => b.addEventListener('click', e => {
-      if (confirm('確定刪除？')) { deleteRecord(e.currentTarget.dataset.id); refreshDiary(); }
-    }));
+    diaryListView.querySelectorAll('.toggle-done').forEach(b => b.addEventListener('click', e => { const id = e.currentTarget.dataset.id; const r = records.find(x => x.id === id); if (r) updateRecord(id, { status: r.status === 'active' ? 'done' : 'active' }); refreshDiary(); }));
+    diaryListView.querySelectorAll('.edit-list-diary').forEach(b => b.addEventListener('click', e => { const r = records.find(x => x.id === e.currentTarget.dataset.id); if (r) openEditForm(formatDate(r.createdAt)); }));
+    diaryListView.querySelectorAll('.delete-diary').forEach(b => b.addEventListener('click', e => { if (confirm('確定刪除？')) { deleteRecord(e.currentTarget.dataset.id); refreshDiary(); } }));
   }
-
   function refreshDiary() {
-    const myDiaries = records.filter(r => r.userId === currentUser.id && !r.isPublic);
-    const filtered = diaryFilter === 'all' ? myDiaries : myDiaries.filter(r => r.status === diaryFilter);
-    renderDiaryList(filtered);
+    if (diaryMode === 'calendar') renderCalendar();
+    else { const myDiaries = getMyDiaries(); const filtered = diaryFilter === 'all' ? myDiaries : myDiaries.filter(r => r.status === diaryFilter); renderDiaryList(filtered); }
   }
 
-  function startEditDiary(id) {
-    const r = records.find(x => x.id === id);
-    if (!r) return;
-    diarySelectedMood = r.mood; diarySelectedMoodInput.value = r.mood;
-    document.querySelectorAll('#diaryMoodGrid .mood-option').forEach(o => o.classList.toggle('selected', o.dataset.mood === r.mood));
-    diaryIntensity.value = r.intensity; diaryIntensityDisplay.textContent = r.intensity;
-    diaryText.value = r.diary; diaryCharCount.textContent = `${r.diary.length}/100`;
-    diaryEditingIdInput.value = r.id; diaryEditingId = r.id;
-    diaryError.textContent = '';
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
-  function resetDiaryForm() {
-    diarySelectedMood = ''; diarySelectedMoodInput.value = '';
-    document.querySelectorAll('#diaryMoodGrid .mood-option').forEach(o => o.classList.remove('selected'));
-    diaryIntensity.value = 5; diaryIntensityDisplay.textContent = '5';
-    diaryText.value = ''; diaryCharCount.textContent = '0/100';
-    diaryEditingIdInput.value = ''; diaryEditingId = null;
-    diaryError.textContent = '';
-  }
-
+  // ========== 漂流瓶 + 聊天 ==========
   function renderBottleDisplay(record) {
     if (!record) { bottleDisplay.innerHTML = '<p style="color:var(--text-soft);">點擊下方按鈕，隨機撈取一個來自世界的情緒瓶子</p>'; return; }
-    const mood = MOODS[record.mood] || {};
-    const regionName = REGION_LABELS[record.region] || '未知';
-    bottleDisplay.innerHTML = `
-      <div class="bottle-card">
-        <div class="bottle-neck"></div>
-        <span class="bottle-emoji">${mood.emoji}</span>
-        <div class="bottle-mood">${mood.label} · ${record.intensity}/10</div>
-        <div class="bottle-diary">"${escapeHtml(record.diary) || '⋯'}"</div>
-        <div class="bottle-region">📍 ${regionName} · ${formatTime(record.createdAt)}</div>
-        <div class="cheer-buttons">
-          <button class="cheer-btn" data-cheer="🫶">🫶 暖心拍拍</button>
-          <button class="cheer-btn" data-cheer="🌈">🌈 送你彩虹</button>
-          <button class="cheer-btn" data-cheer="🔥">🔥 我懂</button>
-        </div>
-      </div>`;
-    bottleDisplay.querySelectorAll('.cheer-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        let arr = [];
-        try { arr = JSON.parse(record.cheers || '[]'); } catch { arr = []; }
-        arr.push(this.dataset.cheer);
-        updateRecord(record.id, { cheers: JSON.stringify(arr) });
-        this.classList.add('sent');
-        setTimeout(() => this.classList.remove('sent'), 600);
-      });
-    });
+    const mood = MOODS[record.mood] || {}; const regionName = REGION_LABELS[record.region] || '未知';
+    let convArr = []; try { convArr = JSON.parse(record.conversation || '[]'); } catch {}
+    const hasActiveConv = record.conversationActive && convArr.length > 0;
+    bottleDisplay.innerHTML = `<div class="bottle-card"><div class="bottle-neck"></div><span class="bottle-emoji">${mood.emoji}</span><div class="bottle-mood">${mood.label} · ${record.intensity}/10</div><div class="bottle-diary">"${escapeHtml(record.diary)||'⋯'}"</div><div class="bottle-region">📍 ${regionName} · ${formatTime(record.createdAt)}</div><div class="cheer-buttons"><button class="cheer-btn" data-cheer="🫶">🫶 暖心拍拍</button><button class="cheer-btn" data-cheer="🌈">🌈 送你彩虹</button><button class="cheer-btn" data-cheer="🔥">🔥 我懂</button></div><button class="btn btn-primary btn-small" id="chatBtn" style="margin-top:8px;">💬 ${hasActiveConv ? '繼續對話' : '回應這個瓶子'}</button></div>`;
+    bottleDisplay.querySelectorAll('.cheer-btn').forEach(btn => { btn.addEventListener('click', function() { let arr = []; try { arr = JSON.parse(record.cheers||'[]'); } catch {} arr.push(this.dataset.cheer); updateRecord(record.id, { cheers: JSON.stringify(arr) }); this.classList.add('sent'); setTimeout(() => this.classList.remove('sent'), 600); }); });
+    document.getElementById('chatBtn').addEventListener('click', () => openChat(record));
+  }
+  function openChat(record) {
+    let convArr = []; try { convArr = JSON.parse(record.conversation || '[]'); } catch {}
+    const isBottleOwner = record.userId === currentUser.id;
+    const otherName = isBottleOwner ? '瓶中信友 B' : '瓶中信友 A';
+    const myName = isBottleOwner ? '瓶中信友 A' : '瓶中信友 B';
+    modalContent.innerHTML = `<div class="modal-header"><span>💬 匿名對話 · ${otherName}</span><button class="modal-close" id="modalClose">✕</button></div>
+      <div class="chat-container"><div class="chat-messages" id="chatMessages">${convArr.map(m => `<div class="chat-msg ${m.from===currentUser.id?'from-me':'from-other'}"><span>${escapeHtml(m.msg)}</span><div class="msg-time">${formatTime(m.time)}</div></div>`).join('')}</div>
+      ${record.conversationActive ? `<div class="chat-input-row"><input id="chatInput" placeholder="輸入回應..."><button class="btn btn-primary btn-small" id="chatSend">發送</button></div><p style="font-size:0.65rem;color:var(--text-soft);text-align:center;">剩餘 ${CHAT_LIMIT - convArr.length} 輪</p>` : '<p style="text-align:center;color:var(--text-soft);">對話已結束</p>'}
+      <button class="btn btn-secondary btn-small" id="chatEnd" style="width:100%;margin-top:8px;">結束對話</button></div>`;
+    modalOverlay.classList.add('active');
+    document.getElementById('modalClose').addEventListener('click', () => modalOverlay.classList.remove('active'));
+    if (record.conversationActive) {
+      document.getElementById('chatSend').addEventListener('click', () => { const msg = document.getElementById('chatInput').value.trim(); if (!msg) return; convArr.push({ from: currentUser.id, msg, time: new Date().toISOString() }); const active = convArr.length < CHAT_LIMIT; updateRecord(record.id, { conversation: JSON.stringify(convArr), conversationActive: active }); modalOverlay.classList.remove('active'); });
+    }
+    document.getElementById('chatEnd').addEventListener('click', () => { if (confirm('確定結束對話？')) { updateRecord(record.id, { conversationActive: false }); modalOverlay.classList.remove('active'); } });
   }
 
-  function resetBottleForm() {
-    bottleSelectedMood = ''; bottleSelectedMoodInput.value = '';
-    document.querySelectorAll('#bottleMoodGrid .mood-option').forEach(o => o.classList.remove('selected'));
-    bottleIntensity.value = 5; bottleIntensityDisplay.textContent = '5';
-    bottleDiary.value = ''; bottleCharCount.textContent = '0/100';
-    bottleError.textContent = '';
-  }
+  function resetBottleForm() { bottleSelectedMood = ''; bottleSelectedMoodInput.value = ''; document.querySelectorAll('#bottleMoodGrid .mood-option').forEach(o => o.classList.remove('selected')); bottleIntensity.value = 5; bottleIntensityDisplay.textContent = '5'; bottleDiary.value = ''; bottleCharCount.textContent = '0/100'; bottleError.textContent = ''; }
 
+  // ========== 世界地圖 ==========
   async function loadWorldData() {
-    worldLoading.style.display = 'block';
-    worldMap.style.display = 'none';
-    worldError.style.display = 'none';
-    try {
-      const sheetRecords = await fetchFromSheet();
-      worldData = sheetRecords ? sheetRecords.filter(r => r.isPublic) : records.filter(r => r.isPublic);
-      if (!worldData.length) {
-        worldLoading.style.display = 'none';
-        worldError.style.display = 'block';
-        worldError.textContent = '🌊 目前還沒有公開的情緒瓶子，去投遞一個吧！';
-        return;
-      }
-      renderWorldMap(worldData);
-      worldLoading.style.display = 'none';
-      worldMap.style.display = 'grid';
-    } catch(e) {
-      worldData = records.filter(r => r.isPublic);
-      if (!worldData.length) { worldLoading.style.display = 'none'; worldError.style.display = 'block'; worldError.textContent = '⚠️ 無法載入世界資料'; return; }
-      renderWorldMap(worldData);
-      worldLoading.style.display = 'none';
-      worldMap.style.display = 'grid';
-    }
+    worldLoading.style.display = 'block'; worldMap.style.display = 'none'; worldError.style.display = 'none';
+    try { const sr = await fetchFromSheet(); worldData = sr ? sr.filter(r => r.isPublic) : records.filter(r => r.isPublic); if (!worldData.length) { worldLoading.style.display = 'none'; worldError.style.display = 'block'; worldError.textContent = '🌊 目前還沒有公開的情緒瓶子，去投遞一個吧！'; return; } renderWorldMap(worldData); worldLoading.style.display = 'none'; worldMap.style.display = 'grid'; }
+    catch { worldData = records.filter(r => r.isPublic); if (!worldData.length) { worldLoading.style.display = 'none'; worldError.style.display = 'block'; worldError.textContent = '⚠️ 無法載入世界資料'; return; } renderWorldMap(worldData); worldLoading.style.display = 'none'; worldMap.style.display = 'grid'; }
   }
-
   function renderWorldMap(data) {
-    worldMap.innerHTML = CONTINENTS.map(continent => {
-      const regionRecords = data.filter(r => r.region === continent);
-      const total = regionRecords.length;
-      const moodCounts = {};
-      regionRecords.forEach(r => { moodCounts[r.mood] = (moodCounts[r.mood] || 0) + 1; });
-      const sortedMoods = Object.entries(moodCounts).sort((a, b) => b[1] - a[1]);
-      let barHTML = total > 0 ? sortedMoods.map(([mood, count]) => {
-        const pct = Math.round((count / total) * 100);
-        const mi = MOODS[mood] || { emoji: '❓' };
-        return `<div class="bar-row"><span class="bar-emoji">${mi.emoji}</span><div class="bar-track"><div class="bar-fill ${mood}" style="width:${pct}%;"></div></div><span class="bar-pct">${pct}%</span></div>`;
-      }).join('') : '<div class="bar-row"><span style="color:var(--text-soft);font-size:0.65rem;">尚無瓶子</span></div>';
-      return `<div class="continent-card" data-continent="${continent}">
-        <div class="continent-header"><span class="continent-flag">${REGION_EMOJIS[continent]}</span><span class="continent-name">${REGION_LABELS[continent]}</span><span class="continent-count">${total} 瓶</span></div>
-        <div class="bar-chart">${barHTML}</div></div>`;
-    }).join('');
-    worldMap.querySelectorAll('.continent-card').forEach(card => {
-      card.addEventListener('click', () => showContinentDetail(card.dataset.continent));
-    });
+    worldMap.innerHTML = CONTINENTS.map(c => { const rr = data.filter(r => r.region === c); const t = rr.length; const mc = {}; rr.forEach(r => { mc[r.mood] = (mc[r.mood]||0)+1; }); const sm = Object.entries(mc).sort((a,b) => b[1]-a[1]); const bar = t>0 ? sm.map(([m,ct]) => { const p = Math.round((ct/t)*100); const mi = MOODS[m]||{emoji:'❓'}; return `<div class="bar-row"><span class="bar-emoji">${mi.emoji}</span><div class="bar-track"><div class="bar-fill ${m}" style="width:${p}%;"></div></div><span class="bar-pct">${p}%</span></div>`; }).join('') : '<div class="bar-row"><span style="color:var(--text-soft);font-size:0.65rem;">尚無瓶子</span></div>'; return `<div class="continent-card" data-continent="${c}"><div class="continent-header"><span class="continent-flag">${REGION_EMOJIS[c]}</span><span class="continent-name">${REGION_LABELS[c]}</span><span class="continent-count">${t} 瓶</span></div><div class="bar-chart">${bar}</div></div>`; }).join('');
+    worldMap.querySelectorAll('.continent-card').forEach(card => card.addEventListener('click', () => showContinentDetail(card.dataset.continent)));
   }
-
   function showContinentDetail(continent) {
-    const regionRecords = worldData.filter(r => r.region === continent);
-    const regionName = REGION_LABELS[continent] || continent;
-    const regionEmoji = REGION_EMOJIS[continent] || '🌍';
-    continentModalContent.innerHTML = regionRecords.length ? `
-      <div class="modal-header"><span>${regionEmoji} ${regionName} · ${regionRecords.length} 個瓶子</span><button class="modal-close" id="modalClose">✕</button></div>
-      ${[...regionRecords].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).map(r => {
-        const mood = MOODS[r.mood] || {};
-        let cheersArr = []; try { cheersArr = JSON.parse(r.cheers||'[]'); } catch {}
-        return `<div class="modal-bottle"><div class="bottle-header"><span>${mood.emoji}</span><span>${mood.label} · ${r.intensity}/10</span>${cheersArr.length ? `<span style="font-size:0.65rem;color:var(--accent-glow);">${cheersArr.join(' ')} ×${cheersArr.length}</span>` : ''}</div><div class="bottle-diary">${escapeHtml(r.diary)||'⋯'}</div><div class="bottle-time">${formatTime(r.createdAt)}</div></div>`;
-      }).join('')}` : `<div class="modal-header"><span>${regionEmoji} ${regionName}</span><button class="modal-close" id="modalClose">✕</button></div><p style="color:var(--text-soft);text-align:center;">這個地區還沒有任何情緒瓶子 🫧</p>`;
-    continentModal.classList.add('active');
-    document.getElementById('modalClose').addEventListener('click', () => continentModal.classList.remove('active'));
+    const rr = worldData.filter(r => r.region === continent); const rn = REGION_LABELS[continent]||continent; const re = REGION_EMOJIS[continent]||'🌍';
+    modalContent.innerHTML = rr.length ? `<div class="modal-header"><span>${re} ${rn} · ${rr.length} 個瓶子</span><button class="modal-close" id="modalClose">✕</button></div>${[...rr].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).map(r => { const mood = MOODS[r.mood]||{}; let ca=[]; try{ca=JSON.parse(r.cheers||'[]');}catch{} return `<div class="modal-bottle"><div class="bottle-header"><span>${mood.emoji}</span><span>${mood.label} · ${r.intensity}/10</span>${ca.length?`<span style="font-size:0.65rem;color:var(--accent-glow);">${ca.join(' ')} ×${ca.length}</span>`:''}</div><div class="bottle-diary">${escapeHtml(r.diary)||'⋯'}</div><div class="bottle-time">${formatTime(r.createdAt)}</div></div>`; }).join('')}` : `<div class="modal-header"><span>${re} ${rn}</span><button class="modal-close" id="modalClose">✕</button></div><p style="color:var(--text-soft);text-align:center;">這個地區還沒有任何情緒瓶子 🫧</p>`;
+    modalOverlay.classList.add('active'); document.getElementById('modalClose').addEventListener('click', () => modalOverlay.classList.remove('active'));
   }
+  modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) modalOverlay.classList.remove('active'); });
 
-  continentModal.addEventListener('click', e => { if (e.target === continentModal) continentModal.classList.remove('active'); });
+  // ========== Tab 切換 ==========
+  tabNav.querySelectorAll('.tab-btn').forEach(btn => { btn.addEventListener('click', () => { tabNav.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentTab = btn.dataset.tab; tabContents.forEach(tc => tc.classList.remove('active')); document.getElementById(currentTab).classList.add('active'); if (currentTab === 'tab-world') loadWorldData(); if (currentTab === 'tab-bottle') updateSeaStatus(); }); });
 
-  tabNav.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      tabNav.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentTab = btn.dataset.tab;
-      tabContents.forEach(tc => tc.classList.remove('active'));
-      document.getElementById(currentTab).classList.add('active');
-      if (currentTab === 'tab-world') loadWorldData();
-      if (currentTab === 'tab-bottle') updateSeaStatus();
-    });
-  });
+  // ========== 事件 ==========
+  diaryToolbar.querySelectorAll('.mode-btn').forEach(b => b.addEventListener('click', function() { diaryToolbar.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('active')); this.classList.add('active'); diaryMode = this.dataset.mode; diaryCalendarView.style.display = diaryMode === 'calendar' ? 'block' : 'none'; diaryListView.style.display = diaryMode === 'list' ? 'flex' : 'none'; diarySortBtn.style.display = diaryMode === 'list' ? 'inline-block' : 'none'; refreshDiary(); }));
+  diaryToolbar.querySelectorAll('.filter-btn').forEach(b => b.addEventListener('click', function() { diaryToolbar.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active')); this.classList.add('active'); diaryFilter = this.dataset.filter; refreshDiary(); }));
+  diarySortBtn.addEventListener('click', () => { diarySortAsc = !diarySortAsc; diarySortBtn.textContent = diarySortAsc ? '🕒 最舊 ⇄ 最新' : '🕒 最新 ⇄ 最舊'; refreshDiary(); });
 
-  buildMoodGrid(diaryMoodGrid, mood => { diarySelectedMood = mood; diarySelectedMoodInput.value = mood; });
-  diaryIntensity.addEventListener('input', e => { diaryIntensityDisplay.textContent = e.target.value; });
-  diaryText.addEventListener('input', e => { diaryCharCount.textContent = `${e.target.value.length}/100`; });
-  diaryForm.addEventListener('submit', e => {
-    e.preventDefault();
-    if (!diarySelectedMood) { diaryError.textContent = '請選擇天氣'; return; }
-    const intensity = parseInt(diaryIntensity.value);
-    if (isNaN(intensity) || intensity<1||intensity>10) { diaryError.textContent='強度錯誤'; return; }
-    const record = createRecord({ mood: diarySelectedMood, intensity, diary: diaryText.value.trim(), status: 'active', isPublic: false });
-    if (diaryEditingId) { updateRecord(diaryEditingId, { mood: diarySelectedMood, intensity, diary: diaryText.value.trim() }); }
-    else { saveData(record); }
-    resetDiaryForm();
-    refreshDiary();
-  });
-  diaryToolbar.querySelectorAll('.filter-btn').forEach(b => b.addEventListener('click', function() {
-    diaryToolbar.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active'));
-    this.classList.add('active');
-    diaryFilter = this.dataset.filter;
-    refreshDiary();
-  }));
-  diarySortBtn.addEventListener('click', () => {
-    diarySortAsc = !diarySortAsc;
-    diarySortBtn.textContent = diarySortAsc ? '🕒 最舊 ⇄ 最新' : '🕒 最新 ⇄ 最舊';
-    refreshDiary();
-  });
-
-  buildMoodGrid(bottleMoodGrid, mood => { bottleSelectedMood = mood; bottleSelectedMoodInput.value = mood; });
-  bottleIntensity.addEventListener('input', e => { bottleIntensityDisplay.textContent = e.target.value; });
-  bottleDiary.addEventListener('input', e => { bottleCharCount.textContent = `${e.target.value.length}/100`; });
-  bottleForm.addEventListener('submit', e => {
-    e.preventDefault();
-    if (!bottleSelectedMood) { bottleError.textContent = '請選擇天氣'; return; }
-    const intensity = parseInt(bottleIntensity.value);
-    if (isNaN(intensity) || intensity<1||intensity>10) { bottleError.textContent='強度錯誤'; return; }
-    saveData(createRecord({ mood: bottleSelectedMood, intensity, diary: bottleDiary.value.trim(), status: 'active', isPublic: true, region: bottleRegion.value }));
-    resetBottleForm();
-    bottleDisplay.innerHTML = '<p style="color:#69db7c;">✅ 你的瓶子已投向大海！</p>';
-    updateSeaStatus();
-    refreshDiary();
-  });
-  fetchBottleBtn.addEventListener('click', () => {
-    const publicRecords = records.filter(r => r.isPublic && r.userId !== currentUser.id);
-    updateSeaStatus();
-    if (!publicRecords.length) {
-      bottleDisplay.innerHTML = `<p style="color:var(--text-soft);">🌊 大海中還沒有其他人的瓶子<br><small>目前大海中有 ${records.filter(r=>r.isPublic).length} 個瓶子（其中 ${records.filter(r=>r.isPublic&&r.userId===currentUser.id).length} 個是你投的）</small><br><small>分享這個頁面給朋友，邀請他們一起投遞吧！</small></p>`;
-      return;
-    }
-    renderBottleDisplay(publicRecords[Math.floor(Math.random() * publicRecords.length)]);
-  });
+  buildMoodGrid(bottleMoodGrid, m => { bottleSelectedMood = m; bottleSelectedMoodInput.value = m; });
+  bottleIntensity.addEventListener('input', e => bottleIntensityDisplay.textContent = e.target.value);
+  bottleDiary.addEventListener('input', e => bottleCharCount.textContent = `${e.target.value.length}/100`);
+  bottleForm.addEventListener('submit', e => { e.preventDefault(); if (!bottleSelectedMood) { bottleError.textContent='請選擇天氣'; return; } const intensity = parseInt(bottleIntensity.value); if (isNaN(intensity)||intensity<1||intensity>10) { bottleError.textContent='強度錯誤'; return; } saveData(createRecord({ mood: bottleSelectedMood, intensity, diary: bottleDiary.value.trim(), status: 'active', isPublic: true, region: bottleRegion.value })); resetBottleForm(); bottleDisplay.innerHTML = '<p style="color:#69db7c;">✅ 你的瓶子已投向大海！</p>'; updateSeaStatus(); refreshDiary(); });
+  fetchBottleBtn.addEventListener('click', () => { const pr = records.filter(r => r.isPublic && r.userId !== currentUser.id); updateSeaStatus(); if (!pr.length) { bottleDisplay.innerHTML = `<p style="color:var(--text-soft);">🌊 大海中還沒有其他人的瓶子<br><small>目前大海中有 ${records.filter(r=>r.isPublic).length} 個瓶子（其中 ${records.filter(r=>r.isPublic&&r.userId===currentUser.id).length} 個是你投的）</small></p>`; return; } renderBottleDisplay(pr[Math.floor(Math.random()*pr.length)]); });
 
   function refreshAll() { refreshDiary(); updateSeaStatus(); userBadge.textContent = `${currentUser.emoji} ${currentUser.name}`; }
-
-  function init() {
-    loadUser();
-    buildMoodGrid(diaryMoodGrid, mood => { diarySelectedMood = mood; diarySelectedMoodInput.value = mood; });
-    buildMoodGrid(bottleMoodGrid, mood => { bottleSelectedMood = mood; bottleSelectedMoodInput.value = mood; });
-    records = loadFromLocal();
-    refreshAll();
-    fetchFromSheet().then(sheetRecords => {
-      if (sheetRecords !== null) { records = sheetRecords; cloudAvailable = true; syncStatusEl.textContent = '🟢 雲端已同步'; persistLocal(); }
-      else { cloudAvailable = false; syncStatusEl.textContent = '🟠 無法連接雲端，使用離線資料'; }
-      refreshAll();
-    }).catch(() => { cloudAvailable = false; syncStatusEl.textContent = '🔴 雲端離線，使用本地資料'; });
-  }
+  function init() { loadUser(); const now = new Date(); calendarYear = now.getFullYear(); calendarMonth = now.getMonth()+1; buildMoodGrid(bottleMoodGrid, m => { bottleSelectedMood = m; bottleSelectedMoodInput.value = m; }); records = loadFromLocal(); diaryCalendarView.style.display = 'block'; diaryListView.style.display = 'none'; refreshAll(); fetchFromSheet().then(sr => { if (sr !== null) { records = sr; cloudAvailable = true; syncStatusEl.textContent = '🟢 雲端已同步'; persistLocal(); } else { cloudAvailable = false; syncStatusEl.textContent = '🟠 無法連接雲端，使用離線資料'; } refreshAll(); }).catch(() => { cloudAvailable = false; syncStatusEl.textContent = '🔴 雲端離線，使用本地資料'; }); }
   init();
 })();
 </script>
